@@ -1,0 +1,9 @@
+time	date	quantity	distributor	vendor
+08:01	2019-01-02	58	widgets, inc.	big box enterprises
+08:03	2019-01-02	103	widgets, inc.	blue big box corp
+08:03	2019-01-02	1000	widgets, inc.	fabricatrix
+08:04	2019-01-02	5	ferrous machine company	widgets, inc.
+08:04	2019-01-02	300	ferrous machine comp4ny	automotive R&D X
+08:05	2019-01-02	10	parent automotive company	automotive R&D X
+08:07	2019-01-02	10	parent automotive company	Your Local Auto Dealer
+08:07	2019-01-03	2	parent automotive company	Your Local Auto Dealer
