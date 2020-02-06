@@ -7,6 +7,8 @@ Topologic has yet to be published to [PyPi](https://pypi.org/), and the document
 Please file a new [issue](https://github.com/microsoft/topologic/issues/new) if you find any bugs, either in the code or the documentation.
 
 ## Development Setup Instructions
+[git-lfs](https://git-lfs.github.com/) is highly suggested.
+
 Topologic was developed for Python 3.5+ and makes extensive use of type hints throughout. Python 2.7 is not supported.
 
 Topologic is known to work with Python x64 3.6, 3.7, and 3.8 on Windows and Ubuntu, and presumed to work on MacOS as well. Please submit a new [issue](https://github.com/microsoft/topologic/issues/new) with any issues
@@ -15,14 +17,18 @@ Topologic is known to work with Python x64 3.6, 3.7, and 3.8 on Windows and Ubun
 TODO: instructions
 
 ### MacOS
-TODO: instructions
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -U setuptools wheel pip
+```
 
 ### Ubuntu
 ```bash
 sudo apt-get update && sudo apt-get install python3-pip python3-dev
-sudo python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
-pip install -U setuptools wheel
+pip install -U setuptools wheel pip
 ```
 
 ### Running Tests
