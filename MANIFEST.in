@@ -1,0 +1,2 @@
+recursive-include topologic version.txt
+prune tests
