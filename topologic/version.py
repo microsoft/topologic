@@ -4,13 +4,12 @@
 import datetime
 from typing import List, Optional, Tuple
 import pkg_resources
-from . import __name__ as package_name
 
 __all__: List[str] = ["get_version_and_type", "get_version"]
 
 # manually updated
 __semver = "0.1.0"
-
+package_name = "topologic"
 __version_file = "version.txt"
 
 
