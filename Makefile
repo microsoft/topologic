@@ -18,8 +18,8 @@ lint:
 	flake8 ./topologic ./tests
 
 type-check:
-	mypy -m topologic
-	mypy -m tests
+	mypy ./topologic
+	mypy ./tests
 
 test: type-check run-test-report lint 
 
