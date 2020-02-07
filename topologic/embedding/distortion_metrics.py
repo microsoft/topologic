@@ -37,7 +37,7 @@ def mean_average_precision(
     for source in graph.nodes:
         source_degree = graph.degree(source)
         neighbors = [n for n in graph.neighbors(source)]
-        inner_sum = 0
+        inner_sum = 0.0
 
         for neighbor in neighbors:
             nodes_closer_than_neighbor_in_embedding_space = _calculate_set_of_nodes_closer_than_given_node(
@@ -47,11 +47,11 @@ def mean_average_precision(
                 distance_metric=distance_metric
             )
             common_nodes = set(neighbors).intersection(set(nodes_closer_than_neighbor_in_embedding_space))
-            inner_sum += (len(common_nodes)/len(nodes_closer_than_neighbor_in_embedding_space))
+            inner_sum += len(common_nodes) / len(nodes_closer_than_neighbor_in_embedding_space)
 
-        numerator += (inner_sum/source_degree)
+        numerator += inner_sum / source_degree
 
-    mAP = numerator/len(graph)
+    mAP = numerator / len(graph)
 
     return mAP
 
