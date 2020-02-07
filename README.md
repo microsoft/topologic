@@ -7,20 +7,25 @@ Topologic has yet to be published to [PyPi](https://pypi.org/), and the document
 Please file a new [issue](https://github.com/microsoft/topologic/issues/new) if you find any bugs, either in the code or the documentation.
 
 ## Development Setup Instructions
-[git-lfs](https://git-lfs.github.com/) is highly suggested.
+Topologic was developed for Python 3.6+ and makes extensive use of type hints throughout and _f_-strings throughout. Python 2.7 is not supported.
 
-Topologic was developed for Python 3.5+ and makes extensive use of type hints throughout. Python 2.7 is not supported.
-
-Topologic is known to work with Python x64 3.6, 3.7, and 3.8 on Windows and Ubuntu, and presumed to work on MacOS as well. Please submit a new [issue](https://github.com/microsoft/topologic/issues/new) with any issues
+Topologic is known to work with Python x64 3.6, 3.7, and 3.8 on Windows and Ubuntu, and presumed to work on MacOS as well. Please submit a new [issue](https://github.com/microsoft/topologic/issues/new) with any issues found on any of these versions.
 
 ### Windows
-TODO: instructions
+```cmd
+py -m venv venv
+venv\Scripts\activate.bat
+pip install -U setuptools wheel pip
+pip install -r requirements.txt
+```
+It is possible that you will need to install Visual Studio Build Tools for some of the `topologic` dependencies. Some dependencies such as scipy and numpy have C code that must be compiled for your version of Python to work. Please follow the directions in your console if you have errors after installing the requirements and then try again after following these instructions.
 
 ### MacOS
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -U setuptools wheel pip
+pip install -r requirements.txt
 ```
 
 ### Ubuntu
@@ -29,15 +34,16 @@ sudo apt-get update && sudo apt-get install python3-pip python3-dev
 python3 -m venv venv
 source venv/bin/activate
 pip install -U setuptools wheel pip
+pip install -r requirements.txt
 ```
 
 ### Running Tests
 
 ```bash
-mypy -m topologic
-mypy -m tests
+mypy ./topologic
+mypy ./tests
 flake8 ./topologic ./tests
-pytest tests topologic --doctest-modules
+pytest tests topologic
 ```
 
 # Contributing
