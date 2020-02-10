@@ -8,7 +8,7 @@ import pkg_resources
 __all__: List[str] = ["get_version_and_type", "get_version"]
 
 # manually updated
-__semver = "0.1.0"
+__semver = "0.1.0b1"
 package_name = "topologic"
 __version_file = "version.txt"
 
