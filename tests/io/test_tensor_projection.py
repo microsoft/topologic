@@ -5,7 +5,7 @@ import topologic.io as tc_io
 import numpy as np
 import tempfile
 import unittest
-from pathlib import Path
+import os
 
 
 class TestTensorProjectionWriter(unittest.TestCase):
@@ -13,20 +13,19 @@ class TestTensorProjectionWriter(unittest.TestCase):
         embedding_initial = np.random.rand(21, 50)
 
         with tempfile.TemporaryDirectory() as temp_directory:
-            temp_directory_path = Path(temp_directory)
-            embedding_file_path = temp_directory_path / 'vectors.tsv'
-            label_file_path = temp_directory_path / 'labels.tsv'
+            embedding_file_path = os.path.join(temp_directory, 'vectors.tsv')
+            label_file_path = os.path.join(temp_directory, 'labels.tsv')
 
             tc_io.tensor_projection_writer(
-                str(embedding_file_path),
-                str(label_file_path),
+                embedding_file_path,
+                label_file_path,
                 embedding_initial,
                 [['test', 'test2', 'test3'], 'new line']
             )
 
             embedding_from_disk, labels_from_disk = tc_io.tensor_projection_reader(
-                str(embedding_file_path),
-                str(label_file_path)
+                embedding_file_path,
+                label_file_path
             )
 
             # Verify that the deserialized embedding is equivalent to the starting embedding

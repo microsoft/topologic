@@ -27,9 +27,10 @@ def tensor_projection_writer(
     :param str encoding: The encoding used to write the file
     """
     # write vector file and label files separately
-    np.savetxt(embedding_file_path, vectors, delimiter='\t', newline='\n', encoding=encoding)
+    np.savetxt(embedding_file_path, vectors, delimiter='\t', encoding=encoding)
 
-    with open(label_file_path, 'w+', encoding=encoding) as labels_file:
+    # per python docs newline='' must be specified, see: https://docs.python.org/3/library/csv.html footnotes
+    with open(label_file_path, 'w+', encoding=encoding, newline='') as labels_file:
         csv_writer = csv.writer(labels_file, delimiter='\t')
 
         for label_line in labels:
