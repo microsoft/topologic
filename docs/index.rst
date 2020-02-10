@@ -10,7 +10,7 @@ Welcome to topologic's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   Tutorials <https://github.com/microsoft/topologic/tree/readme-updates/notebooks>
+   Tutorials <https://github.com/microsoft/topologic/tree/master/notebooks>
    modules
 
 .. toctree::
