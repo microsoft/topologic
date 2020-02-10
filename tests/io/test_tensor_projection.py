@@ -5,7 +5,6 @@ import topologic.io as tc_io
 import numpy as np
 import tempfile
 import unittest
-from pathlib import Path
 import os
 
 
