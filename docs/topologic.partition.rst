@@ -1,13 +1,13 @@
-topologic.partitioning package
+topologic.partition package
 ==============================
 
-.. automodule:: topologic.partitioning
+.. automodule:: topologic.partition
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: louvain
 
-.. function:: topologic.partitioning.louvain(graph: networkx.classes.graph.Graph, partition=Optional[Dict[Any, int]]=None, \
+.. function:: topologic.partition.louvain(graph: networkx.classes.graph.Graph, partition=Optional[Dict[Any, int]]=None, \
         weight: str='weight', resolution: float=1.0, randomize: Optional[bool]=None, random_state: Optional[Any]=None)
 
     This louvain function is an alias to the `community.best_partition <https://python-louvain.readthedocs.io/en/latest/api.html#community.best_partition>`_ function

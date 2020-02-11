@@ -31,7 +31,7 @@ from . import projection
 from . import iterators
 from . import statistics
 from . import embedding
-from . import partitioning
+from . import partition
 
 __all__ = [
     'DialectException',

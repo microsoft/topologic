@@ -4,5 +4,5 @@
 import community
 
 
-# Documentation note: see docs/topologic.partitioning.rst for document string to louvain function alias
+# Documentation note: see docs/topologic.partition.rst for document string to louvain function alias
 louvain = community.best_partition

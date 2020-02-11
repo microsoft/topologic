@@ -4,7 +4,7 @@
 import networkx as nx
 import numpy as np
 from topologic import PartitionedGraph
-from topologic.partitioning import q_score
+from topologic.partition import q_score
 import unittest
 
 

@@ -14,7 +14,7 @@ Subpackages
    topologic.embedding
    topologic.io
    topologic.iterators
-   topologic.partitioning
+   topologic.partition
    topologic.projection
    topologic.statistics
 

@@ -25,7 +25,7 @@ class TestDensities(unittest.TestCase):
         for source, target in graph.edges():
             graph.add_edge(source, target, weight=1)
 
-        partitions = tc.partitioning.louvain(graph=graph, random_state=1)
+        partitions = tc.partition.louvain(graph=graph, random_state=1)
 
         internal_density, external_density = tc.embedding.metric.calculate_internal_external_densities(
             graph=graph,
