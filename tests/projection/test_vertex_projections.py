@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 import unittest
-from topologic import MetadataTypeRegistry, projection
+from topologic import projection
 import networkx as nx
 
 
@@ -14,8 +14,7 @@ class TestVertexCollectionMetadataProjection(unittest.TestCase):
             ["id1", "Dwayne", "jvm"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.vertex_with_collection_metadata(header, 0)(graph, registry)
+        projection_func = projection.vertex_with_collection_metadata(header, 0)(graph)
         for row in rows:
             projection_func(row)
 
@@ -28,8 +27,7 @@ class TestVertexCollectionMetadataProjection(unittest.TestCase):
         ]
         graph = nx.Graph()
         graph.add_edge("id1", "something")  # otherwise the node won't get added
-        registry = MetadataTypeRegistry()
-        projection_func = projection.vertex_with_collection_metadata(header, 0)(graph, registry)
+        projection_func = projection.vertex_with_collection_metadata(header, 0)(graph)
         for row in rows:
             projection_func(row)
 
@@ -45,8 +43,7 @@ class TestVertexCollectionMetadataProjection(unittest.TestCase):
         ]
         graph = nx.Graph()
         graph.add_edge("id1", "something")  # otherwise the node won't get added
-        registry = MetadataTypeRegistry()
-        projection_func = projection.vertex_with_collection_metadata(header, 0)(graph, registry)
+        projection_func = projection.vertex_with_collection_metadata(header, 0)(graph)
         for row in rows:
             projection_func(row)
 
@@ -63,9 +60,8 @@ class TestVertexCollectionMetadataProjection(unittest.TestCase):
         ]
         graph = nx.Graph()
         graph.add_edge("id1", "something")  # otherwise the node won't get added
-        registry = MetadataTypeRegistry()
         # filter out NULL to change the dictionary "shape"
-        projection_func = projection.vertex_with_collection_metadata(header, 0, ["NULL"])(graph, registry)
+        projection_func = projection.vertex_with_collection_metadata(header, 0, ["NULL"])(graph)
         for row in rows:
             projection_func(row)
 
@@ -89,8 +85,7 @@ class TestVertexCollectionMetadataProjection(unittest.TestCase):
         ]
         graph = nx.Graph()
         graph.add_edge("id1", "id2")
-        registry = MetadataTypeRegistry()
-        projection_func = projection.vertex_with_collection_metadata(header, 0)(graph, registry)
+        projection_func = projection.vertex_with_collection_metadata(header, 0)(graph)
         for row in rows:
             projection_func(row)
 
@@ -111,8 +106,7 @@ class TestVertexSingleMetadataProjection(unittest.TestCase):
             ["id1", "Dwayne", "jvm"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.vertex_with_single_metadata(header, 0)(graph, registry)
+        projection_func = projection.vertex_with_single_metadata(header, 0)(graph)
         for row in rows:
             projection_func(row)
 
@@ -125,8 +119,7 @@ class TestVertexSingleMetadataProjection(unittest.TestCase):
         ]
         graph = nx.Graph()
         graph.add_edge("id1", "something")  # otherwise the node won't get added
-        registry = MetadataTypeRegistry()
-        projection_func = projection.vertex_with_single_metadata(header, 0)(graph, registry)
+        projection_func = projection.vertex_with_single_metadata(header, 0)(graph)
         for row in rows:
             projection_func(row)
 
@@ -142,8 +135,7 @@ class TestVertexSingleMetadataProjection(unittest.TestCase):
         ]
         graph = nx.Graph()
         graph.add_edge("id1", "something")  # otherwise the node won't get added
-        registry = MetadataTypeRegistry()
-        projection_func = projection.vertex_with_single_metadata(header, 0)(graph, registry)
+        projection_func = projection.vertex_with_single_metadata(header, 0)(graph)
         for row in rows:
             projection_func(row)
 
@@ -159,9 +151,8 @@ class TestVertexSingleMetadataProjection(unittest.TestCase):
         ]
         graph = nx.Graph()
         graph.add_edge("id1", "something")  # otherwise the node won't get added
-        registry = MetadataTypeRegistry()
         # filter out NULL to change the dictionary "shape"
-        projection_func = projection.vertex_with_single_metadata(header, 0, ["NULL"])(graph, registry)
+        projection_func = projection.vertex_with_single_metadata(header, 0, ["NULL"])(graph)
         for row in rows:
             projection_func(row)
 
@@ -181,8 +172,7 @@ class TestVertexSingleMetadataProjection(unittest.TestCase):
         ]
         graph = nx.Graph()
         graph.add_edge("id1", "id2")
-        registry = MetadataTypeRegistry()
-        projection_func = projection.vertex_with_single_metadata(header, 0)(graph, registry)
+        projection_func = projection.vertex_with_single_metadata(header, 0)(graph)
         for row in rows:
             projection_func(row)
 

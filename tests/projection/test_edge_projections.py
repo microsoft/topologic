@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 import unittest
-from topologic import MetadataTypeRegistry, projection
+from topologic import projection
 import networkx as nx
 
 
@@ -15,8 +15,7 @@ class TestEdgeCollectionMetadataProjection(unittest.TestCase):
             ["id1", "id2", "5", "too fast"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_with_collection_metadata(headers, 0, 1, 2, [])(graph, registry)
+        projection_func = projection.edge_with_collection_metadata(headers, 0, 1, 2, [])(graph)
         for row in rows:
             projection_func(row)
 
@@ -31,8 +30,7 @@ class TestEdgeCollectionMetadataProjection(unittest.TestCase):
             ["id1", "id2", "3", "reasonable and prudent"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_with_collection_metadata(headers, 0, 1, 2, [])(graph, registry)
+        projection_func = projection.edge_with_collection_metadata(headers, 0, 1, 2, [])(graph)
         for row in rows:
             projection_func(row)
 
@@ -48,8 +46,7 @@ class TestEdgeCollectionMetadataProjection(unittest.TestCase):
             ["id1", "id2", "3", "NONE"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_with_collection_metadata(headers, 0, 1, 2, ["NONE"])(graph, registry)
+        projection_func = projection.edge_with_collection_metadata(headers, 0, 1, 2, ["NONE"])(graph)
         for row in rows:
             projection_func(row)
 
@@ -66,8 +63,7 @@ class TestEdgeCollectionMetadataProjection(unittest.TestCase):
             ["id2", "id3", "1", "slow"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_with_collection_metadata(headers, 0, 1, 2, [])(graph, registry)
+        projection_func = projection.edge_with_collection_metadata(headers, 0, 1, 2, [])(graph)
         for row in rows:
             projection_func(row)
 
@@ -89,8 +85,7 @@ class TestEdgeCollectionMetadataProjection(unittest.TestCase):
             ["id1", "id2"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_with_collection_metadata(headers, 0, 1, 2, [])(graph, registry)
+        projection_func = projection.edge_with_collection_metadata(headers, 0, 1, 2, [])(graph)
         for row in rows:
             projection_func(row)
 
@@ -103,8 +98,7 @@ class TestEdgeSingleMetadataProjection(unittest.TestCase):
             ["id1", "id2", "5", "too fast"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_with_single_metadata(headers, 0, 1, 2, [])(graph, registry)
+        projection_func = projection.edge_with_single_metadata(headers, 0, 1, 2, [])(graph)
         for row in rows:
             projection_func(row)
 
@@ -119,8 +113,7 @@ class TestEdgeSingleMetadataProjection(unittest.TestCase):
             ["id1", "id2", "3", "reasonable and prudent"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_with_single_metadata(headers, 0, 1, 2, [])(graph, registry)
+        projection_func = projection.edge_with_single_metadata(headers, 0, 1, 2, [])(graph)
         for row in rows:
             projection_func(row)
 
@@ -135,8 +128,7 @@ class TestEdgeSingleMetadataProjection(unittest.TestCase):
             ["id1", "id2", "3", "NONE"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_with_single_metadata(headers, 0, 1, 2, ["NONE"])(graph, registry)
+        projection_func = projection.edge_with_single_metadata(headers, 0, 1, 2, ["NONE"])(graph)
         for row in rows:
             projection_func(row)
 
@@ -152,8 +144,7 @@ class TestEdgeSingleMetadataProjection(unittest.TestCase):
             ["id2", "id3", "1", "slow"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_with_single_metadata(headers, 0, 1, 2, [])(graph, registry)
+        projection_func = projection.edge_with_single_metadata(headers, 0, 1, 2, [])(graph)
         for row in rows:
             projection_func(row)
 
@@ -174,8 +165,7 @@ class TestEdgeSingleMetadataProjection(unittest.TestCase):
             ["id1", "id2"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_with_single_metadata(headers, 0, 1, 2, [])(graph, registry)
+        projection_func = projection.edge_with_single_metadata(headers, 0, 1, 2, [])(graph)
         for row in rows:
             projection_func(row)
 
@@ -188,8 +178,7 @@ class TestEdgeNoMetadataProjection(unittest.TestCase):
             ["id1", "id2", "5", "too fast"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_ignore_metadata(0, 1, 2)(graph, registry)
+        projection_func = projection.edge_ignore_metadata(0, 1, 2)(graph)
         for row in rows:
             projection_func(row)
 
@@ -202,8 +191,7 @@ class TestEdgeNoMetadataProjection(unittest.TestCase):
             ["id1", "id2", "3", "reasonable and prudent"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_ignore_metadata(0, 1, 2)(graph, registry)
+        projection_func = projection.edge_ignore_metadata(0, 1, 2)(graph)
         for row in rows:
             projection_func(row)
 
@@ -217,8 +205,7 @@ class TestEdgeNoMetadataProjection(unittest.TestCase):
             ["id2", "id3", "1", "slow"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_ignore_metadata(0, 1, 2)(graph, registry)
+        projection_func = projection.edge_ignore_metadata(0, 1, 2)(graph)
         for row in rows:
             projection_func(row)
 
@@ -235,8 +222,7 @@ class TestEdgeNoMetadataProjection(unittest.TestCase):
             ["id1", "id2"]
         ]
         graph = nx.Graph()
-        registry = MetadataTypeRegistry()
-        projection_func = projection.edge_ignore_metadata(0, 1, 2)(graph, registry)
+        projection_func = projection.edge_ignore_metadata(0, 1, 2)(graph)
         for row in rows:
             projection_func(row)
 

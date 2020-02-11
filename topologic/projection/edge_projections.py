@@ -3,7 +3,6 @@
 
 import networkx as nx
 from typing import Any, Callable, List, Optional
-from ..metadata_types import MetadataTypeRegistry
 from ._common import ATTRIBUTES, metadata_to_dict
 
 
@@ -56,7 +55,7 @@ def edge_with_collection_metadata(
     target_index: int,
     weight_index: Optional[int] = None,
     ignored_values: Optional[List[str]] = None
-) -> Callable[[nx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]:
+) -> Callable[[nx.Graph], Callable[[List[str]], None]]:
     """
     Some graph algorithms have undefined behavior over multigraphs.  To skirt this limitation, we allow the data to
     represent a multigraph, though we collapse it into a non-multigraph.  We do this by aggregating the weights,
@@ -76,15 +75,14 @@ def edge_with_collection_metadata(
         "NULL" or ""
     :return: A partially applied function that partially applies yet more arguments prior to the final operation
         function
-    :rtype: Callable[[networkx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]
+    :rtype: Callable[[networkx.Graph], Callable[[List[str]], None]]
     """
     if not ignored_values:
         ignored_values = []
     ignore_list = [source_index, target_index]
 
-    def _configure_graph_and_type_registry(
-            graph: nx.Graph,
-            type_registry: MetadataTypeRegistry
+    def _configure_graph(
+        graph: nx.Graph
     ) -> Callable[[List[str]], None]:
         def _edge_with_collection_metadata(row: List[str]):
             if _length_check(row, source_index, target_index, weight_index):
@@ -97,12 +95,12 @@ def edge_with_collection_metadata(
                     target,
                     row_weight
                 )
-                row_metadata = metadata_to_dict(row, ignore_list, ignored_values, headers, type_registry)
+                row_metadata = metadata_to_dict(row, ignore_list, ignored_values, headers)
                 if not graph[source][target].get(ATTRIBUTES):
                     graph[source][target][ATTRIBUTES] = []
                 graph[source][target][ATTRIBUTES].append(row_metadata)
         return _edge_with_collection_metadata
-    return _configure_graph_and_type_registry
+    return _configure_graph
 
 
 def edge_with_single_metadata(
@@ -111,7 +109,7 @@ def edge_with_single_metadata(
     target_index: int,
     weight_index: Optional[int] = None,
     ignored_values: Optional[List[str]] = None
-) -> Callable[[nx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]:
+) -> Callable[[nx.Graph], Callable[[List[str]], None]]:
     """
     Will load edges into graph even if they are a multigraph.  However, aside from weight, the multigraph attributes are
     ignored and the last record to be processed for that source and target will have its metadata retained and all prior
@@ -129,16 +127,15 @@ def edge_with_single_metadata(
         "NULL" or ""
     :return: A partially applied function that partially applies yet more arguments prior to the final operation
         function
-    :rtype: Callable[[networkx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]
+    :rtype: Callable[[networkx.Graph], Callable[[List[str]], None]]
     """
 
     if not ignored_values:
         ignored_values = []
     ignore_list = [source_index, target_index]
 
-    def _configure_graph_and_type_registry(
-            graph: nx.Graph,
-            type_registry: MetadataTypeRegistry
+    def _configure_graph(
+        graph: nx.Graph
     ) -> Callable[[List[str]], None]:
 
         def _edge_with_single_metadata(row: List[str]):
@@ -152,17 +149,17 @@ def edge_with_single_metadata(
                     target,
                     row_weight
                 )
-                row_metadata = [metadata_to_dict(row, ignore_list, ignored_values, headers, type_registry)]
+                row_metadata = [metadata_to_dict(row, ignore_list, ignored_values, headers)]
                 graph[source][target][ATTRIBUTES] = row_metadata
         return _edge_with_single_metadata
-    return _configure_graph_and_type_registry
+    return _configure_graph
 
 
 def edge_ignore_metadata(
     source_index: int,
     target_index: int,
     weight_index: Optional[int] = None
-) -> Callable[[nx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]:
+) -> Callable[[nx.Graph], Callable[[List[str]], None]]:
     """
     Drops all metadata.  Creates graph solely based on source, target, and optional weight.
 
@@ -175,11 +172,10 @@ def edge_ignore_metadata(
         will have their weights (or inferred weight) aggregated into a single value.
     :return: A partially applied function that partially applies yet more arguments prior to the final operation
         function
-    :rtype: Callable[[networkx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]
+    :rtype: Callable[[networkx.Graph], Callable[[List[str]], None]]
     """
-    def _configure_graph_and_type_registry(
-            graph: nx.Graph,
-            type_registry: MetadataTypeRegistry  # we don't actually need this, but it's part of the contract
+    def _configure_graph(
+        graph: nx.Graph
     ) -> Callable[[List[str]], None]:
 
         def _edge_ignore_metadata(row: List[str]):
@@ -194,4 +190,4 @@ def edge_ignore_metadata(
                     row_weight
                 )
         return _edge_ignore_metadata
-    return _configure_graph_and_type_registry
+    return _configure_graph

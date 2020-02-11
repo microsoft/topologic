@@ -4,7 +4,7 @@
 import unittest
 
 import csv
-from topologic.io import CsvDataset, from_dataset, from_file, GraphContainer, load
+from topologic.io import CsvDataset, from_dataset, from_file, load
 from topologic import projection
 from ..utils import data_file
 
@@ -40,7 +40,7 @@ class TestCsvLoaderFromDataset(unittest.TestCase):
                 2,
                 4
             )
-            graph, registry = from_dataset(edge_dataset, proj)
+            graph = from_dataset(edge_dataset, proj)
             self.assertEqual(7, len(graph.nodes))
             self.assertEqual(2, graph["jon"]["john"]["weight"])
             attributes = graph["jon"]["john"]["attributes"]
@@ -65,7 +65,6 @@ class TestCsvLoaderFromDataset(unittest.TestCase):
                 {"date": "7/2/2018", "subject": "No I'm not Lumberg", "replyCount": "0"},
                 attributes[4]
             )
-            self.assertEqual(int, registry.attribute_to_type_mapping()["replyCount"])
 
     def test_vertex(self):
         with open(data_file("tiny-graph-vertex.csv")) as vertex_file:
@@ -78,9 +77,8 @@ class TestCsvLoaderFromDataset(unittest.TestCase):
                 vertex_dataset.headers(),
                 0
             )
-            graph, registry = from_dataset(vertex_dataset, proj)
+            graph = from_dataset(vertex_dataset, proj)
             self.assertEqual(0, len(graph.nodes))
-            self.assertEqual(0, len(registry.attribute_to_type_mapping()))
 
     def test_edge_then_vertex(self):
         with open(data_file("tiny-multigraph.csv")) as edge_file:
@@ -95,7 +93,7 @@ class TestCsvLoaderFromDataset(unittest.TestCase):
                 2,
                 4
             )
-            graph, registry = from_dataset(edge_dataset, proj)
+            graph = from_dataset(edge_dataset, proj)
 
             with open(data_file("tiny-graph-vertex.csv")) as vertex_file:
                 vertex_dataset = CsvDataset(
@@ -108,10 +106,9 @@ class TestCsvLoaderFromDataset(unittest.TestCase):
                     0,
                     ignored_values=["NULL"]
                 )
-                same_graph, new_registry = from_dataset(vertex_dataset, vertex_proj, graph)
+                same_graph = from_dataset(vertex_dataset, vertex_proj, graph)
 
                 self.assertTrue(same_graph == graph)
-                self.assertTrue(registry != new_registry)
 
             self.assertEqual(7, len(graph.nodes))
             self.assertEqual(2, graph["jon"]["john"]["weight"])
@@ -137,7 +134,6 @@ class TestCsvLoaderFromDataset(unittest.TestCase):
                 {"date": "7/2/2018", "subject": "No I'm not Lumberg", "replyCount": "0"},
                 attributes[4]
             )
-            self.assertEqual(int, registry.attribute_to_type_mapping()["replyCount"])
 
             self.assertDictEqual({"lastName": "larson"}, graph.nodes["jon"]["attributes"][0])
             self.assertDictEqual(
@@ -192,7 +188,7 @@ class TestCsvLoaderFromFile(unittest.TestCase):
 
     def test_edge_only_collection_projection(self):
         with open(data_file("tiny-multigraph.csv")) as edge_file:
-            container: GraphContainer = from_file(
+            graph = from_file(
                 edge_file,
                 1,
                 2,
@@ -201,8 +197,7 @@ class TestCsvLoaderFromFile(unittest.TestCase):
                 "excel",
                 edge_metadata_behavior="collection"
             )
-            graph = container.graph
-            registry = container.edge_metadata_type_registry
+
             self.assertEqual(7, len(graph.nodes))
             self.assertEqual(2, graph["jon"]["john"]["weight"])
             attributes = graph["jon"]["john"]["attributes"]
@@ -227,11 +222,10 @@ class TestCsvLoaderFromFile(unittest.TestCase):
                 {"date": "7/2/2018", "subject": "No I'm not Lumberg", "replyCount": "0"},
                 attributes[4]
             )
-            self.assertEqual(int, registry.attribute_to_type_mapping()["replyCount"])
 
     def test_edge_only_single_projection(self):
         with open(data_file("tiny-graph.csv")) as edge_file:
-            container: GraphContainer = from_file(
+            graph = from_file(
                 edge_file,
                 1,
                 2,
@@ -241,8 +235,7 @@ class TestCsvLoaderFromFile(unittest.TestCase):
                 edge_csv_use_headers=["date", "emailFrom", "emailTo", "subject", "replyCount"],
                 edge_metadata_behavior="single"
             )
-            graph = container.graph
-            registry = container.edge_metadata_type_registry
+
             self.assertEqual(7, len(graph.nodes))
             self.assertEqual(1, graph["jon"]["john"]["weight"])
             attributes = graph["jon"]["john"]["attributes"]
@@ -250,11 +243,10 @@ class TestCsvLoaderFromFile(unittest.TestCase):
                 {"date": "7/2/2018", "subject": "RE: Graphs are great", "replyCount": "0"},
                 attributes[0]
             )
-            self.assertEqual(int, registry.attribute_to_type_mapping()["replyCount"])
 
     def test_edge_only_no_metadata_projection(self):
         with open(data_file("tiny-graph.csv")) as edge_file:
-            container: GraphContainer = from_file(
+            graph = from_file(
                 edge_file,
                 1,
                 2,
@@ -264,17 +256,14 @@ class TestCsvLoaderFromFile(unittest.TestCase):
                 edge_csv_use_headers=["date", "emailFrom", "emailTo", "subject", "replyCount"],
                 edge_metadata_behavior="none"
             )
-            graph = container.graph
-            registry = container.edge_metadata_type_registry
             self.assertEqual(7, len(graph.nodes))
             self.assertEqual(1, graph["jon"]["john"]["weight"])
             self.assertNotIn("attributes", graph["jon"]["john"])
-            self.assertNotIn("replyCount", registry.attribute_to_type_mapping())
 
     def test_vertex_single_projection(self):
         with open(data_file("tiny-multigraph.csv")) as edge_file:
             with open(data_file("tiny-graph-vertex.csv")) as vertex_file:
-                container: GraphContainer = from_file(
+                graph = from_file(
                     edge_file,
                     1,
                     2,
@@ -287,12 +276,6 @@ class TestCsvLoaderFromFile(unittest.TestCase):
                     vertex_csv_has_headers=True,
                     vertex_dialect=csv.excel()
                 )
-
-                graph = container.graph
-                edge_registry = container.edge_metadata_type_registry
-                vertex_registry = container.vertex_metadata_type_registry
-
-                self.assertTrue(edge_registry != vertex_registry)  # specifically verifying memory addresses differ
 
                 self.assertEqual(7, len(graph.nodes))
                 self.assertEqual(2, graph["jon"]["john"]["weight"])
@@ -321,7 +304,6 @@ class TestCsvLoaderFromFile(unittest.TestCase):
                     {"date": "7/2/2018", "subject": "No I'm not Lumberg", "replyCount": "0"},
                     attributes[4]
                 )
-                self.assertEqual(int, edge_registry.attribute_to_type_mapping()["replyCount"])
 
                 self.assertDictEqual(
                     {"lastName": "larson", "sandwichPreference": "NULL"},

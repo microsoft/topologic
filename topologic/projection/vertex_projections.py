@@ -4,7 +4,6 @@
 import networkx as nx
 
 from typing import Callable, List, Optional
-from ..metadata_types import MetadataTypeRegistry
 from ._common import ATTRIBUTES, metadata_to_dict
 
 
@@ -15,7 +14,7 @@ def vertex_with_collection_metadata(
     headers: List[str],
     vertex_id_index: int,
     ignored_values: Optional[List[str]] = None
-) -> Callable[[nx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]:
+) -> Callable[[nx.Graph], Callable[[List[str]], None]]:
     """
     This function is an unlikely function to use; if you have vertex metadata you wish to load into the networkx.Graph
     where the vertex_id is repeated, it would be a better choice for you to compact those into a single record
@@ -33,14 +32,13 @@ def vertex_with_collection_metadata(
         "NULL" or ""
     :return: A partially applied function that partially applies yet more arguments prior to the final operation
         function
-    :rtype: Callable[[networkx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]
+    :rtype: Callable[[networkx.Graph], Callable[[List[str]], None]]
     """
     if not ignored_values:
         ignored_values = []
 
-    def _configure_graph_and_type_registry(
-            graph: nx.Graph,
-            type_registry: MetadataTypeRegistry
+    def _configure_graph(
+        graph: nx.Graph
     ) -> Callable[[List[str]], None]:
         def _vertex_with_collection_metadata(row: List[str]):
             vertex_id = row[vertex_id_index]
@@ -50,22 +48,21 @@ def vertex_with_collection_metadata(
                     row,
                     [vertex_id_index],
                     ignored_values,
-                    headers,
-                    type_registry
+                    headers
                 )
                 if not graph.nodes[vertex_id].get(ATTRIBUTES):
                     graph.nodes[vertex_id][ATTRIBUTES] = []
                 previous_metadata = graph.nodes[vertex_id][ATTRIBUTES]
                 previous_metadata.append(row_metadata)
         return _vertex_with_collection_metadata
-    return _configure_graph_and_type_registry
+    return _configure_graph
 
 
 def vertex_with_single_metadata(
         headers: List[str],
         vertex_id_index: int,
         ignored_values: List[str] = None
-) -> Callable[[nx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]:
+) -> Callable[[nx.Graph], Callable[[List[str]], None]]:
     """
     Function will project vertex metadata into the graph.  If prior data exists for the vertex_id, the later instance
     of data for the vertex_id will clobber it.
@@ -80,14 +77,13 @@ def vertex_with_single_metadata(
         "NULL" or ""
     :return: A partially applied function that partially applies yet more arguments prior to the final operation
         function
-    :rtype: Callable[[networkx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]
+    :rtype: Callable[[networkx.Graph], Callable[[List[str]], None]]
     """
     if not ignored_values:
         ignored_values = []
 
-    def _configure_graph_and_type_registry(
-            graph: nx.Graph,
-            type_registry: MetadataTypeRegistry
+    def _configure_graph(
+        graph: nx.Graph
     ) -> Callable[[List[str]], None]:
         def _vertex_with_single_metadata(row: List[str]):
             vertex_id = row[vertex_id_index]
@@ -96,10 +92,9 @@ def vertex_with_single_metadata(
                     row,
                     [vertex_id_index],
                     ignored_values,
-                    headers,
-                    type_registry
+                    headers
                 )
                 # clobber the existing attributes
                 graph.nodes[vertex_id][ATTRIBUTES] = [current_vertex_metadata]
         return _vertex_with_single_metadata
-    return _configure_graph_and_type_registry
+    return _configure_graph

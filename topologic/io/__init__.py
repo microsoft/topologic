@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
-from .csv_loader import from_dataset, from_file, GraphContainer, load
+from .csv_loader import from_dataset, from_file, load
 from .datasets import CsvDataset
 from .tensor_projection import tensor_projection_reader, tensor_projection_writer
 from .edge_detector import find_edges
@@ -15,7 +15,6 @@ __all__ = [
     "find_edges",
     "from_dataset",
     "from_file",
-    "GraphContainer",
     "GraphProperties",
     "load",
     "PotentialEdgeColumnPair",

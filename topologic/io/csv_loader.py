@@ -3,28 +3,19 @@
 
 import networkx as nx
 import csv
-from typing import Callable, List, NamedTuple, Optional, TextIO, Tuple, Union
-
+from typing import Callable, List, Optional, TextIO, Union
 from ..projection.edge_projections import edge_ignore_metadata, edge_with_collection_metadata, edge_with_single_metadata
 from ..projection.vertex_projections import vertex_with_collection_metadata, vertex_with_single_metadata
-from ..metadata_types import MetadataTypeRegistry
 from .datasets import CsvDataset
-
-
-class GraphContainer(NamedTuple):
-    graph: nx.Graph
-    edge_metadata_type_registry: MetadataTypeRegistry
-    vertex_metadata_type_registry: MetadataTypeRegistry
 
 
 def from_dataset(
     csv_dataset: CsvDataset,
-    projection_function_generator: Callable[[nx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]],
-    graph: Optional[nx.Graph] = None,
-    metadata_type_registry: Optional[MetadataTypeRegistry] = None
-) -> Tuple[nx.Graph, MetadataTypeRegistry]:
+    projection_function_generator: Callable[[nx.Graph], Callable[[List[str]], None]],
+    graph: Optional[nx.Graph] = None
+) -> nx.Graph:
     """
-    Load a graph from an source csv
+    Load a graph from a source csv
 
     The most important part of this function is selecting the appropriate projection function generators.
     These functions generate yet another function generator, which in turn generates the function we will use to
@@ -40,37 +31,28 @@ def from_dataset(
       edge or vertex in a list of metadata dictionaries
 
     You can certainly provide your own projection function generators for specialized needs; just ensure they follow
-    the type signature of Callable[[networkx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]
-
-    Note that even if you don't want any metadata to be retained, we still require a MetadataTypeRegistry to be
-    configured for each 2nd layer function configuration.  Ensure you follow the type signatures referenced even if you
-    ignore the registry for your own needs.
+    the type signature of Callable[[nx.Graph], Callable[[List[str]], None]]
 
     :param CsvDataset csv_dataset: the dataset to read from row by row
     :param projection_function_generator: The
-        projection function generator function.  When called with a nx.Graph and MetadataTypeRegistry will return the
+        projection function generator function.  When called with a nx.Graph, it will return the
         actual projection function to be used when processing each row of data.
-    :type projection_function_generator: Callable[[networkx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]
-    :param networkx.Graph graph: The graph to populate.  If not provided a new one is created of type nx.Graph.  Note
+    :type projection_function_generator: Callable[[nx.Graph], Callable[[List[str]], None]]
+    :param nx.Graph graph: The graph to populate.  If not provided a new one is created of type nx.Graph.  Note
         that from_dataset can be called repeatedly with different edge or vertex csv_dataset files to populate the graph
-        more and more. If you seek to take this approach, ensure you use the same Graph and MetadataTypeRegistry objects
-        from the previous calls so that these are all continuously populated with the updated data from new files
-    :param MetadataTypeRegistry metadata_type_registry: The edge metadata type registry to populate if the projection
-        function desires. If not provided a new one is created.  If the projection function does not populate it, it
-        will remain empty.
-    :return: A Tuple with the graph object and metadata registry.
-    :rtype: Tuple[networkx.Graph, MetadataTypeRegistry]
+        more and more. If you seek to take this approach, ensure you use the same Graph object
+        from the previous calls so that it is continuously populated with the updated data from new files
+    :return: the graph object
+    :rtype: nx.Graph
     """
     if not graph:
         graph = nx.Graph()
-    if not metadata_type_registry:
-        metadata_type_registry = MetadataTypeRegistry()
 
-    projection_function = projection_function_generator(graph, metadata_type_registry)
+    projection_function = projection_function_generator(graph)
     for row in csv_dataset.reader():
-        projection_function(row)
+        projection_function(row)networkx
 
-    return graph, metadata_type_registry
+    return graph
 
 
 def from_file(
@@ -91,7 +73,7 @@ def from_file(
     vertex_metadata_behavior: str = "single",
     vertex_ignored_values: Optional[List[str]] = None,
     sample_size: int = 50
-) -> GraphContainer:
+) -> nx.Graph:
     """
     This function weaves a lot of graph materialization code into a single call.
 
@@ -178,11 +160,8 @@ def from_file(
         Please note that this sample_size does NOT advance your underlying iterator, nor is there any guarantee that
         the csv Sniffer class will use every row extracted via sample_size.  Setting this above 50 may not have the
         impact you hope for due to the csv.Sniffer.has_header function - it will use at most 20 rows.
-    :return: The graph and metadata type registries for the edges and vertices.
-
-        Do note that the type registgries fields will be present upon return regardless of any metadata captured via
-        the projection processes.  They will simply be empty and can be discarded.
-    :rtype: GraphContainer
+    :return: The graph populated graph
+    :rtype: nx.Graph
     """
     edge_dataset = CsvDataset(
         edge_csv_file,
@@ -192,7 +171,7 @@ def from_file(
         sample_size
     )
 
-    edge_projection_function: Optional[Callable[[nx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]] = None
+    edge_projection_function: Optional[Callable[[nx.Graph], Callable[[List[str]], None]]] = None
     if edge_metadata_behavior == "none":
         edge_projection_function = edge_ignore_metadata(
             source_column_index,
@@ -218,9 +197,8 @@ def from_file(
     if edge_projection_function is None:
         raise ValueError('edge_metadata_behavior must be "none", "collection", or "single"')
 
-    graph, edge_metadata_type_registry = from_dataset(edge_dataset, edge_projection_function)
+    graph = from_dataset(edge_dataset, edge_projection_function)
 
-    vertex_metadata_type_registry = MetadataTypeRegistry()
     if vertex_csv_file:
         if vertex_column_index is None:
             raise ValueError("If vertex_csv_file is provided, vertex_column_index is also required.")
@@ -232,7 +210,7 @@ def from_file(
             sample_size
         )
         vertex_projection_function: Optional[
-            Callable[[nx.Graph, MetadataTypeRegistry], Callable[[List[str]], None]]
+            Callable[[nx.Graph], Callable[[List[str]], None]]
         ] = None
 
         if vertex_metadata_behavior == "collection":
@@ -251,18 +229,13 @@ def from_file(
         if vertex_projection_function is None:
             raise ValueError('vertex_metadata_behavior must be "collection" or "single"')
 
-        graph, vertex_metadata_type_registry = from_dataset(
+        graph = from_dataset(
             vertex_dataset,
             vertex_projection_function,
-            graph,
-            vertex_metadata_type_registry
+            graph
         )
 
-    return GraphContainer(
-        graph=graph,
-        edge_metadata_type_registry=edge_metadata_type_registry,
-        vertex_metadata_type_registry=vertex_metadata_type_registry
-    )
+    return graph
 
 
 def load(
@@ -299,5 +272,5 @@ def load(
             weight_column_index=weight_index,
             edge_csv_has_headers=has_header,
             edge_dialect=separator
-        ).graph
+        )
     return graph
