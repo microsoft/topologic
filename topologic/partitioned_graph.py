@@ -7,7 +7,6 @@ import networkx as nx
 
 class PartitionedGraph(NamedTuple):
     """A PartitionedGraph combines a networkx graph object with
-    a louvain community partition for that graph. The community can either
-    be calculated or supplied to the constructor"""
+    a global community partitioning for that graph. """
     graph: nx.Graph
-    partition: Dict[Any, int]
+    community_partitions: Dict[Any, int]

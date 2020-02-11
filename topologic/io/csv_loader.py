@@ -50,7 +50,7 @@ def from_dataset(
 
     projection_function = projection_function_generator(graph)
     for row in csv_dataset.reader():
-        projection_function(row)networkx
+        projection_function(row)
 
     return graph
 
