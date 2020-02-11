@@ -11,7 +11,6 @@ from .assertions import assert_is_graph, \
     assert_single_connected_components
 
 # load individual modules into the top level topologic namespace
-from .metadata_types import MetadataTypeRegistry
 from .louvain import best_partition, \
     induce_graph_by_communities, \
     induced_community_graph, \
@@ -44,7 +43,6 @@ __all__ = [
     'GraphProperties',
     'InducedCommunityGraph',
     'InvalidGraphError',
-    'MetadataTypeRegistry',
     'PartitionedGraph',
     'PotentialEdgeColumnPair',
     'assert_is_graph',
