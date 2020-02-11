@@ -31,26 +31,26 @@ def from_dataset(
       edge or vertex in a list of metadata dictionaries
 
     You can certainly provide your own projection function generators for specialized needs; just ensure they follow
-    the type signature of Callable[[networkx.Graph], Callable[[List[str]], None]]
+    the type signature of Callable[[nx.Graph], Callable[[List[str]], None]]
 
     :param CsvDataset csv_dataset: the dataset to read from row by row
     :param projection_function_generator: The
         projection function generator function.  When called with a nx.Graph, it will return the
         actual projection function to be used when processing each row of data.
-    :type projection_function_generator: Callable[[networkx.Graph], Callable[[List[str]], None]]
-    :param networkx.Graph graph: The graph to populate.  If not provided a new one is created of type nx.Graph.  Note
+    :type projection_function_generator: Callable[[nx.Graph], Callable[[List[str]], None]]
+    :param nx.Graph graph: The graph to populate.  If not provided a new one is created of type nx.Graph.  Note
         that from_dataset can be called repeatedly with different edge or vertex csv_dataset files to populate the graph
         more and more. If you seek to take this approach, ensure you use the same Graph object
         from the previous calls so that it is continuously populated with the updated data from new files
     :return: the graph object
-    :rtype: networkx.Graph
+    :rtype: nx.Graph
     """
     if not graph:
         graph = nx.Graph()
 
     projection_function = projection_function_generator(graph)
     for row in csv_dataset.reader():
-        projection_function(row)
+        projection_function(row)networkx
 
     return graph
 
