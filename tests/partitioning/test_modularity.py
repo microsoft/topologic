@@ -3,13 +3,14 @@
 
 import networkx as nx
 import numpy as np
-from topologic import InvalidGraphError, q_score, PartitionedGraph
+from topologic import PartitionedGraph
+from topologic.partitioning import q_score
 import unittest
 
 
 class TestModularity(unittest.TestCase):
     def test_wrong_type(self):
-        with self.assertRaises(InvalidGraphError):
+        with self.assertRaises(TypeError):
             q_score("foo")
 
     def test_q_score(self):
@@ -17,8 +18,7 @@ class TestModularity(unittest.TestCase):
         graph.add_edge("a", "b", weight=4.0)
         graph.add_edge("b", "c", weight=3.0)
         graph.add_edge("e", "f", weight=5.0)
-        # manually specified partition just in case louvain picks some other partition scheme, which seems incredibly
-        # unlikely, but I hate when builds break due to incredible unlikeliness
+
         partition = {'a': 0, 'b': 0, 'c': 0, 'e': 1, 'f': 1}
         part_graph = PartitionedGraph(graph, partition)
         modularity = q_score(part_graph)
