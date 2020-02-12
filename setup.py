@@ -7,9 +7,7 @@ import os
 def handle_version() -> str:
     sys.path.insert(0, os.path.join("topologic", "version"))
     from version import version
-    print(sys.path)
     sys.path.pop(0)
-    print(sys.path)
 
     version_path = os.path.join("topologic", "version", "version.txt")
     with open(version_path, "w") as version_file:
