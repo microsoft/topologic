@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
-from .version import get_version
+from topologic.version.version import name, version as __version__
 
 # VITAL NOTE: ORDER MATTERS
 from .exceptions import DialectException, InvalidGraphError, UnweightedGraphError
@@ -58,8 +58,3 @@ __all__ = [
     'self_loop_augmentation',
     'UnweightedGraphError'
 ]
-
-name = 'topologic'
-# __build_version__ is defined by the VSTS build and put into version.py.  Copying the variable here so that
-# we define __version__ in the standard __init__.py instead of version.py
-__version__ = get_version()
