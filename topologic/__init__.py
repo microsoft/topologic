@@ -28,7 +28,6 @@ from .scree_plot import find_elbows
 
 from . import io
 from . import projection
-from . import iterators
 from . import statistics
 from . import embedding
 from . import partition

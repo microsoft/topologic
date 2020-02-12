@@ -31,24 +31,6 @@ class TestEdgeDetector(unittest.TestCase):
             self.assertEqual([('moses', 1), ('robert downey jr.', 1)], result.rare_column_values()['emailFrom'])
             self.assertEqual([('jon', 1), ('bill', 1)], result.rare_column_values()['emailTo'])
 
-    def test_find_likely_edges_sampled(self):
-        with open(data_file('tiny-graph.csv')) as csvfile:
-            """Find likely edges using a tiny graph.  The graph is small enough to be validated by hand."""
-            result = tc.find_edges(
-                make_graph_reader(csvfile, sample_size=9),
-                common_values_count=2,
-                rare_values_count=2)
-
-            self.assertEqual(['date', 'emailFrom', 'emailTo', 'subject', 'replyCount'], result.column_names(),
-                             'Column names are not correct')
-
-            top_rated_combo = result.potential_edge_column_pairs()[0]
-
-            self.assertEqual('emailFrom', top_rated_combo.source(), 'Source is not correct')
-            self.assertEqual('emailTo', top_rated_combo.destination(), 'Destination is not correct')
-
-            self.assertEqual(2, top_rated_combo.score(), 'Score is not correct')
-
     def test_edges_tab_separated_values(self):
         with open(data_file('tiny-graph.tsv')) as tsvfile:
             """
@@ -56,7 +38,7 @@ class TestEdgeDetector(unittest.TestCase):
             The graph is small enough to be validated by hand.
             """
             result = tc.find_edges(
-                make_graph_reader(tsvfile, sample_size=9, dialect='excel-tab'),
+                make_graph_reader(tsvfile, dialect='excel-tab'),
                 common_values_count=2,
                 rare_values_count=2)
 
@@ -68,7 +50,7 @@ class TestEdgeDetector(unittest.TestCase):
             self.assertEqual('emailFrom', top_rated_combo.source(), 'Source is not correct')
             self.assertEqual('emailTo', top_rated_combo.destination(), 'Destination is not correct')
 
-            self.assertEqual(2, top_rated_combo.score(), 'Score is not correct')
+            self.assertEqual(3, top_rated_combo.score(), 'Score is not correct')
 
     def test_find_likely_edges_tiny_graph_no_header(self):
         with open(data_file('tiny-graph-no-header.csv')) as csvfile:
@@ -124,14 +106,10 @@ class TestEdgeDetector(unittest.TestCase):
 
 def make_graph_reader(
         csv_file,
-        sample_size=None,
         has_header_row=True,
         dialect='excel'
 ):
     raw_data = csv_file
-
-    if sample_size is not None:
-        raw_data = tc.iterators.Sampler.sample(csv_file, sample_size)
 
     return CsvDataset(
         raw_data,
