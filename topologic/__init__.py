@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
-from topologic.version.version import name, version as __version__
+from .version.version import name, version as __version__
 
 # VITAL NOTE: ORDER MATTERS
 from .exceptions import DialectException, InvalidGraphError, UnweightedGraphError
