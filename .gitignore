@@ -120,3 +120,6 @@ venv.bak/
 
 .vscode/
 *.code-workspace
+
+# ignore any changes to topologic/version/version.txt (this is easy to do - we want this file to exist, but be empty and not include any changes)
+topologic/version/version.txt

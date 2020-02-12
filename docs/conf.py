@@ -35,9 +35,9 @@ copyright = '(C) Microsoft Corporation. All rights reserved.'
 author = 'Microsoft Corporation'
 
 # The short X.Y version
-version = topologic.version.__semver
+version = topologic.version.version.__semver
 # The full version, including alpha/beta/rc tags
-release = topologic.version.get_version()
+release = topologic.version.version.version
 
 
 # -- General configuration ---------------------------------------------------

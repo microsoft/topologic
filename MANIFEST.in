@@ -1,2 +1,2 @@
-recursive-include topologic version.txt
+recursive-include topologic/version version.txt
 prune tests
