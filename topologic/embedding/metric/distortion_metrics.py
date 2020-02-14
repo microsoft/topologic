@@ -4,7 +4,7 @@
 import networkx as nx
 import numpy as np
 from scipy.spatial.distance import cdist
-from .embedding_container import EmbeddingContainer
+from topologic.embedding.embedding_container import EmbeddingContainer
 
 
 def mean_average_precision(

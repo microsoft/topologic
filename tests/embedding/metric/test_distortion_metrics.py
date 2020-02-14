@@ -18,7 +18,7 @@ class TestDistortionMetrics(unittest.TestCase):
 
         expected_mean_avg_precision = 0.9583
 
-        calculated_mean_avg_precision = tc.embedding.distortion_metrics.mean_average_precision(graph, emb_container)
+        calculated_mean_avg_precision = tc.embedding.metric.distortion_metrics.mean_average_precision(graph, emb_container)
 
         self.assertAlmostEqual(expected_mean_avg_precision, calculated_mean_avg_precision, places=4)
 
@@ -26,8 +26,8 @@ class TestDistortionMetrics(unittest.TestCase):
         embedding_container = tc.embedding.EmbeddingContainer(embedding=[[0]], vertex_labels=[0])
 
         with self.assertRaises(ValueError):
-            tc.embedding.distortion_metrics.mean_average_precision(None, embedding_container)
+            tc.embedding.metric.distortion_metrics.mean_average_precision(None, embedding_container)
 
     def test_mean_average_precision_embedding_not_specified_error_raised(self):
         with self.assertRaises(ValueError):
-            tc.embedding.distortion_metrics.mean_average_precision(nx.Graph(), None)
+            tc.embedding.metric.distortion_metrics.mean_average_precision(nx.Graph(), None)
