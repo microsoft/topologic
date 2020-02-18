@@ -18,7 +18,10 @@ class TestDistortionMetrics(unittest.TestCase):
 
         expected_mean_avg_precision = 0.9583
 
-        calculated_mean_avg_precision = tc.embedding.metric.distortion_metrics.mean_average_precision(graph, emb_container)
+        calculated_mean_avg_precision = tc.embedding.metric.distortion_metrics.mean_average_precision(
+            graph,
+            emb_container
+        )
 
         self.assertAlmostEqual(expected_mean_avg_precision, calculated_mean_avg_precision, places=4)
 
