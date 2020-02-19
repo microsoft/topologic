@@ -120,24 +120,24 @@ class _Node2VecGraph:
     def __init__(
             self,
             graph: nx.Graph,
-            p: float,
-            q: float
+            return_hyperparameter: float,
+            inout_hyperparameter: float
     ):
         """
         :param graph: A networkx graph
-        :param p: Return hyperparameter
-        :param q: Inout hyperparameter
+        :param return_hyperparameter: Return hyperparameter
+        :param inout_hyperparameter: Inout hyperparameter
         """
         self.graph: nx.Graph = graph
         self.is_directed = self.graph.is_directed()
-        self.p = p
-        self.q = q
+        self.p = return_hyperparameter
+        self.q = inout_hyperparameter
 
     def _node2vec_walk(self, walk_length, start_node, degree_percentiles):
         """
         Simulate a random walk starting from start node.
         """
-        G = self.graph
+        graph = self.graph
         alias_nodes = self.alias_nodes
         alias_edges = self.alias_edges
 
@@ -151,20 +151,20 @@ class _Node2VecGraph:
         # same number of walks as the high degree nodes, the low degree nodes will take a smaller breadth of paths
         # (due to their being less nodes to choose from) and will bias your resulting Word2Vec embedding
         if degree_percentiles is not None:
-            degree = nx.degree(G, start_node)
+            degree = nx.degree(graph, start_node)
             walk_length = self._get_walk_length_interpolated(degree, degree_percentiles, walk_length)
 
         while len(walk) < walk_length:
-            cur = walk[-1]
-            cur_nbrs = sorted(G.neighbors(cur))
+            current = walk[-1]
+            current_neighbors = sorted(graph.neighbors(current))
 
-            if len(cur_nbrs) > 0:
+            if len(current_neighbors) > 0:
                 if len(walk) == 1:
-                    walk.append(cur_nbrs[_alias_draw(alias_nodes[cur][0], alias_nodes[cur][1])])
+                    walk.append(current_neighbors[_alias_draw(alias_nodes[current][0], alias_nodes[current][1])])
                 else:
                     prev = walk[-2]
-                    next = cur_nbrs[_alias_draw(alias_edges[(prev, cur)][0],
-                                                alias_edges[(prev, cur)][1])]
+                    next = current_neighbors[_alias_draw(alias_edges[(prev, current)][0],
+                                                alias_edges[(prev, current)][1])]
                     walk.append(next)
             else:
                 break
@@ -221,8 +221,8 @@ class _Node2VecGraph:
                 [x for x in range(20, 90, 10)]
             )
 
-        for walk_iter in range(num_walks):
-            logging.info('Walk iteration: ' + str(walk_iter + 1) + '/' + str(num_walks))
+        for walk_iteration in range(num_walks):
+            logging.info('Walk iteration: ' + str(walk_iteration + 1) + '/' + str(num_walks))
             random.shuffle(nodes)
             for node in nodes:
                 walks.append(self._node2vec_walk(
@@ -233,7 +233,7 @@ class _Node2VecGraph:
 
         return walks
 
-    def _get_alias_edge(self, src, dst):
+    def _get_alias_edge(self, source, destination):
         """
         Get the alias edge setup lists for a given edge.
         """
@@ -242,13 +242,13 @@ class _Node2VecGraph:
         q = self.q
 
         unnormalized_probs = []
-        for destination_neighbor in sorted(graph.neighbors(dst)):
-            if destination_neighbor == src:
-                unnormalized_probs.append(graph[dst][destination_neighbor].get('weight', 1) / p)
-            elif graph.has_edge(destination_neighbor, src):
-                unnormalized_probs.append(graph[dst][destination_neighbor].get('weight', 1))
+        for destination_neighbor in sorted(graph.neighbors(destination)):
+            if destination_neighbor == source:
+                unnormalized_probs.append(graph[destination][destination_neighbor].get('weight', 1) / p)
+            elif graph.has_edge(destination_neighbor, source):
+                unnormalized_probs.append(graph[destination][destination_neighbor].get('weight', 1))
             else:
-                unnormalized_probs.append(graph[dst][destination_neighbor].get('weight', 1) / q)
+                unnormalized_probs.append(graph[destination][destination_neighbor].get('weight', 1) / q)
         norm_const = sum(unnormalized_probs)
         normalized_probs = [float(u_prob) / norm_const for u_prob in unnormalized_probs]
 
@@ -261,23 +261,23 @@ class _Node2VecGraph:
         """
         Preprocessing of transition probabilities for guiding the random walks.
         """
-        G = self.graph
+        graph = self.graph
         is_directed = self.is_directed
 
         alias_nodes = {}
-        total_nodes = len(G.nodes())
+        total_nodes = len(graph.nodes())
         bucket = 0
         current_node = 0
         quotient = int(total_nodes / 10)
 
         logging.info(f'Beginning preprocessing of transition probabilities for {total_nodes} vertices')
-        for node in G.nodes():
+        for node in graph.nodes():
             current_node += 1
             if current_node > bucket * quotient:
                 bucket += 1
                 logging.info(f'Completed {current_node} / {total_nodes} vertices')
 
-            unnormalized_probs = [G[node][nbr].get('weight', weight_default) for nbr in sorted(G.neighbors(node))]
+            unnormalized_probs = [graph[node][nbr].get('weight', weight_default) for nbr in sorted(graph.neighbors(node))]
             norm_const = sum(unnormalized_probs)
             normalized_probs = [float(u_prob) / norm_const for u_prob in unnormalized_probs]
             alias_nodes[node] = _alias_setup(normalized_probs)
@@ -285,14 +285,14 @@ class _Node2VecGraph:
 
         alias_edges = {}
 
-        total_edges = len(G.edges())
+        total_edges = len(graph.edges())
         bucket = 0
         current_edge = 0
         quotient = int(total_edges / 10)
 
         logging.info(f'Beginning preprocessing of transition probabilities for {total_edges} edges')
         if is_directed:
-            for edge in G.edges():
+            for edge in graph.edges():
                 current_edge += 1
                 if current_edge > bucket * quotient:
                     bucket += 1
@@ -300,7 +300,7 @@ class _Node2VecGraph:
 
                 alias_edges[edge] = self._get_alias_edge(edge[0], edge[1])
         else:
-            for edge in G.edges():
+            for edge in graph.edges():
                 current_edge += 1
                 if current_edge > bucket * quotient:
                     bucket += 1
@@ -317,48 +317,48 @@ class _Node2VecGraph:
         return
 
 
-def _alias_setup(probs):
+def _alias_setup(probabilities):
     """
     Compute utility lists for non-uniform sampling from discrete distributions.
     Refer to
-     https://hips.seas.harvard.edu/blog/2013/03/03/the-alias-method-efficient-sampling-with-many-discrete-outcomes/
+     https://lips.cs.princeton.edu/the-alias-method-efficient-sampling-with-many-discrete-outcomes/
     for details
     """
-    K = len(probs)
-    q = np.zeros(K)
-    J = np.zeros(K, dtype=np.int)
+    number_of_outcomes = len(probabilities)
+    alias = np.zeros(number_of_outcomes)
+    sampled_probabilities = np.zeros(number_of_outcomes, dtype=np.int)
 
     smaller = []
     larger = []
-    for kk, prob in enumerate(probs):
-        q[kk] = K * prob
-        if q[kk] < 1.0:
-            smaller.append(kk)
+    for i, prob in enumerate(probabilities):
+        alias[i] = number_of_outcomes * prob
+        if alias[i] < 1.0:
+            smaller.append(i)
         else:
-            larger.append(kk)
+            larger.append(i)
 
     while len(smaller) > 0 and len(larger) > 0:
         small = smaller.pop()
         large = larger.pop()
 
-        J[small] = large
-        q[large] = q[large] + q[small] - 1.0
-        if q[large] < 1.0:
+        sampled_probabilities[small] = large
+        alias[large] = alias[large] + alias[small] - 1.0
+        if alias[large] < 1.0:
             smaller.append(large)
         else:
             larger.append(large)
 
-    return J, q
+    return sampled_probabilities, alias
 
 
-def _alias_draw(J, q):
+def _alias_draw(probabilities, alias):
     """
     Draw sample from a non-uniform discrete distribution using alias sampling.
     """
-    K = len(J)
+    number_of_outcomes = len(probabilities)
+    random_index = int(np.floor(np.random.rand() * number_of_outcomes))
 
-    kk = int(np.floor(np.random.rand() * K))
-    if np.random.rand() < q[kk]:
-        return kk
+    if np.random.rand() < alias[random_index]:
+        return random_index
     else:
-        return J[kk]
+        return probabilities[random_index]
