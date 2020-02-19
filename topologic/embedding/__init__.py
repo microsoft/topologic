@@ -11,9 +11,11 @@ from .omnibus_embedding import omnibus_embedding, generate_omnibus_matrix
 from .pca import pca
 from .tsne import tsne
 from .node2vec_walk import node2vec_random_walk_iterator
+from .distance import vector_distance
 
 from . import clustering
 from . import metric
+from . import distance
 
 __all__ = [
     'EmbeddingContainer',
