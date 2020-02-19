@@ -10,7 +10,6 @@ from .laplacian_spectral_embedding import laplacian_embedding
 from .omnibus_embedding import omnibus_embedding, generate_omnibus_matrix
 from .pca import pca
 from .tsne import tsne
-from .node2vec_walk import node2vec_random_walk_iterator
 
 from . import clustering
 from . import metric
@@ -24,7 +23,6 @@ __all__ = [
     'generate_omnibus_matrix',
     'laplacian_embedding',
     'node2vec_embedding',
-    'node2vec_random_walk_iterator',
     'omnibus_embedding',
     'pca',
     'sample_graph_by_edge_weight',

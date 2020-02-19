@@ -5,7 +5,7 @@ import unittest
 import topologic as tc
 import networkx as nx
 import numpy as np
-from topologic.embedding.node2vec_graph import _Node2VecGraph
+from topologic.embedding.node2vec_embedding import _Node2VecGraph
 from tests.utils import data_file
 
 
