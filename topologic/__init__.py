@@ -16,14 +16,12 @@ from .connected_components import number_connected_components, \
     connected_components_generator
 from .partitioned_graph import PartitionedGraph
 from .graph_augmentation import rank_edges, self_loop_augmentation
-from .eigenvalue_elbows import get_elbows_from_eigenvalues
 from .distance import cosine_distance, euclidean_distance, mahalanobis_distance
 
 from .io.bipartite_graph_consolidator import consolidate_bipartite
 from .io.edge_detector import find_edges
 from .io.potential_edge_column_pair import PotentialEdgeColumnPair
 from .io.graph_properties import GraphProperties
-from .scree_plot import find_elbows
 
 from . import similarity
 from . import io
@@ -47,8 +45,6 @@ __all__ = [
     'cosine_distance',
     'euclidean_distance',
     'find_edges',
-    'find_elbows',
-    'get_elbows_from_eigenvalues',
     'largest_connected_component',
     'mahalanobis_distance',
     'number_connected_components',

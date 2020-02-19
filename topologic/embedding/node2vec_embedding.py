@@ -164,7 +164,7 @@ class _Node2VecGraph:
                 else:
                     prev = walk[-2]
                     next = current_neighbors[_alias_draw(alias_edges[(prev, current)][0],
-                                                alias_edges[(prev, current)][1])]
+                                                         alias_edges[(prev, current)][1])]
                     walk.append(next)
             else:
                 break
@@ -277,7 +277,8 @@ class _Node2VecGraph:
                 bucket += 1
                 logging.info(f'Completed {current_node} / {total_nodes} vertices')
 
-            unnormalized_probs = [graph[node][nbr].get('weight', weight_default) for nbr in sorted(graph.neighbors(node))]
+            unnormalized_probs = [graph[node][nbr].get('weight', weight_default)
+                                  for nbr in sorted(graph.neighbors(node))]
             norm_const = sum(unnormalized_probs)
             normalized_probs = [float(u_prob) / norm_const for u_prob in unnormalized_probs]
             alias_nodes[node] = _alias_setup(normalized_probs)
