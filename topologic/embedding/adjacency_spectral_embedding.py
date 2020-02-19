@@ -4,10 +4,10 @@ from typing import Optional
 
 import networkx as nx
 
-from topologic import assertions
 from .embedding_container import EmbeddingContainer
 from .spectral_embedding import _create_augmented_adjacency_matrix, \
     _generate_embedding
+from .. import assertions
 
 
 def adjacency_embedding(

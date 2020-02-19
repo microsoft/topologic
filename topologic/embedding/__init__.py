@@ -1,17 +1,18 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
-from .embedding_methods import EmbeddingMethod
-from .sample_methods import SampleMethod, sample_graph_by_edge_weight, sample_graph_by_vertex_degree
-from .embedding_container import EmbeddingContainer, OutOfSampleEmbeddingContainer
+from . import clustering
+from . import metric
 from .adjacency_spectral_embedding import adjacency_embedding
-from .node2vec_embedding import node2vec_embedding
+from .elbow_finder import find_elbows
+from .embedding_container import EmbeddingContainer, OutOfSampleEmbeddingContainer
+from .embedding_methods import EmbeddingMethod
 from .laplacian_spectral_embedding import laplacian_embedding
+from .node2vec_embedding import node2vec_embedding
 from .omnibus_embedding import omnibus_embedding, generate_omnibus_matrix
 from .pca import pca
+from .sample_methods import SampleMethod, sample_graph_by_edge_weight, sample_graph_by_vertex_degree
 from .tsne import tsne
-from .node2vec_walk import node2vec_random_walk_iterator
-from .distance import vector_distance
 
 from . import clustering
 from . import metric
@@ -23,10 +24,10 @@ __all__ = [
     'OutOfSampleEmbeddingContainer',
     'SampleMethod',
     'adjacency_embedding',
+    'find_elbows',
     'generate_omnibus_matrix',
     'laplacian_embedding',
     'node2vec_embedding',
-    'node2vec_random_walk_iterator',
     'omnibus_embedding',
     'pca',
     'sample_graph_by_edge_weight',
