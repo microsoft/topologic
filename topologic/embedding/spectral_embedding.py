@@ -7,9 +7,9 @@ import networkx as nx
 import numpy as np
 from sklearn.utils.extmath import randomized_svd
 
-from topologic import rank_edges, \
-    self_loop_augmentation, \
-    get_elbows_from_eigenvalues
+from .elbow_finder import find_elbows
+from ..graph_augmentation import rank_edges, \
+    self_loop_augmentation
 
 
 def _create_augmented_adjacency_matrix(weight_column, working_graph):
@@ -77,7 +77,7 @@ def _project_and_reduce_embedding(eigenvector, is_directed, left_singular_values
 
 def _get_reduced_dimensions(eigenvector, elbow_cut, maximum_dimensions):
     if elbow_cut is not None:
-        rank_graph = get_elbows_from_eigenvalues(eigenvector, n_elbows=elbow_cut)
+        rank_graph = find_elbows(eigenvector, num_elbows=elbow_cut)
         reduced_dim = rank_graph[(elbow_cut - 1)]
     else:
         reduced_dim = maximum_dimensions

@@ -1,20 +1,20 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
+import copy
 import logging
 from typing import List, Union, Optional, Tuple
 
 import networkx as nx
 import numpy as np
 import scipy as sp
-import copy
 
-from topologic.embedding import EmbeddingMethod
-from topologic import rank_edges, \
-    self_loop_augmentation, \
-    largest_connected_component
 from .embedding_container import EmbeddingContainer
 from .spectral_embedding import _generate_embedding
+from ..connected_components import largest_connected_component
+from ..embedding import EmbeddingMethod
+from ..graph_augmentation import rank_edges, \
+    self_loop_augmentation
 
 
 def omnibus_embedding(
