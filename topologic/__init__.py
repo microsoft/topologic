@@ -21,11 +21,11 @@ from .distance import cosine_distance, euclidean_distance, mahalanobis_distance
 
 from .io.bipartite_graph_consolidator import consolidate_bipartite
 from .io.edge_detector import find_edges
-from .ari_scores import calculate_ari_scores, calculate_ari
 from .io.potential_edge_column_pair import PotentialEdgeColumnPair
 from .io.graph_properties import GraphProperties
 from .scree_plot import find_elbows
 
+from . import similarity
 from . import io
 from . import projection
 from . import statistics
@@ -42,8 +42,6 @@ __all__ = [
     'assert_is_weighted',
     'assert_is_weighted_graph',
     'assert_single_connected_components',
-    'calculate_ari_scores',
-    'calculate_ari',
     'connected_components_generator',
     'consolidate_bipartite',
     'cosine_distance',
