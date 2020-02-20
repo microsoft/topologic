@@ -12,4 +12,5 @@ Subpackages
 .. toctree::
 
    topologic.embedding.clustering
+   topologic.embedding.distance
    topologic.embedding.metric
