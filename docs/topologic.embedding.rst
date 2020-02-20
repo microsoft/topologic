@@ -6,6 +6,14 @@ topologic.embedding package
    :undoc-members:
    :show-inheritance:
 
+topologic.embedding modules
+=============================
+
+.. automodule:: topologic.embedding.distance
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 

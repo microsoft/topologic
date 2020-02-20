@@ -6,6 +6,13 @@ topologic package
    :undoc-members:
    :show-inheritance:
 
+topologic modules
+===================
+.. automodule:: topologic.similarity
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 

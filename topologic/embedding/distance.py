@@ -1,8 +1,3 @@
-"""
-The distance module has aliased 2 functions that come from `Scipy <https://docs.scipy.org>`_,
-`cosine <https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.cosine.html>`_,
-and `euclidean <https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.euclidean.html>`_
-"""
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
@@ -23,9 +18,15 @@ __all__ = [
 
 
 cosine = spatial.distance.cosine
+cosine.__doc__ = f"{spatial.distance.cosine.__doc__.replace('scipy.spatial', 'topologic.embedding')}\n\n    " \
+    f"This function is an alias for " \
+    f"`scipy.spatial.distance.cosine <https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.cosine.html>`_."
 
 
 euclidean = spatial.distance.euclidean
+euclidean.__doc__ = f"{spatial.distance.euclidean.__doc__.replace('scipy.spatial', 'topologic.embedding')}\n\n    " \
+    f"This function is an alias for " \
+    f"`scipy.spatial.distance.euclidean <https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.euclidean.html>`_."
 
 
 def mahalanobis(inverse_covariance: np.ndarray) -> Callable[[np.ndarray, np.ndarray], float]:
@@ -85,6 +86,7 @@ def vector_distance(
     Vector distance is a function that will do any distance function you would like on two vectors. This is most
     commonly used by changing the method parameter, as a string, from "cosine" to "euclidean" - allowing you to change
     your flow based on configuration not on code changes to the actual cosine and euclidean functions.
+
     :param np.ndarray first_vector: A 1d array-like (list, tuple, np.array) that represents the first vector
     :param np.ndarray second_vector: A 1d array-like (list, tuple, np.array) that represents the second vector
     :param method: Method can be any distance function that takes in 2 parameters. It can also be the string mapping
@@ -113,8 +115,9 @@ def embedding_distances_from(
 
     :param np.ndarray vector: A 1d array-like (list, tuple, np.array) that represents the vector to compare against
         every other vector in the embedding
-    :param Union[EmbeddingContainer, np.ndarray] embedding: The embedding is either a 2d np array, where each row is
+    :param embedding: The embedding is either a 2d np array, where each row is
         a vector and the number of columns is identical to the length of the vector to compare against.
+    :type embedding: Union[EmbeddingContainer, np.ndarray]
     :param method: Method can be any distance function that takes in 2 parameters. It can also be the string mapping
         to that function (as described by valid_distance_functions()). Note that you can also provide other functions,
         such as `mahalanobis`, but they require more information than just the comparative vectors.
