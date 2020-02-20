@@ -16,7 +16,6 @@ from .connected_components import number_connected_components, \
     connected_components_generator
 from .partitioned_graph import PartitionedGraph
 from .graph_augmentation import rank_edges, self_loop_augmentation
-from .distance import cosine_distance, euclidean_distance, mahalanobis_distance
 
 from .io.bipartite_graph_consolidator import consolidate_bipartite
 from .io.edge_detector import find_edges
@@ -42,11 +41,8 @@ __all__ = [
     'assert_single_connected_components',
     'connected_components_generator',
     'consolidate_bipartite',
-    'cosine_distance',
-    'euclidean_distance',
     'find_edges',
     'largest_connected_component',
-    'mahalanobis_distance',
     'number_connected_components',
     'self_loop_augmentation',
     'UnweightedGraphError'

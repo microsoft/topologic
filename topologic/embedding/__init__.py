@@ -6,6 +6,7 @@ from . import metric
 from .adjacency_spectral_embedding import adjacency_embedding
 from .elbow_finder import find_elbows
 from .embedding_container import EmbeddingContainer, OutOfSampleEmbeddingContainer
+from . import distance
 from .embedding_methods import EmbeddingMethod
 from .laplacian_spectral_embedding import laplacian_embedding
 from .node2vec_embedding import node2vec_embedding
