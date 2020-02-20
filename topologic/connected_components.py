@@ -2,7 +2,7 @@
 # Licensed under the MIT license.
 
 import networkx as nx
-from topologic import assertions
+from . import assertions
 from typing import Any, Callable, Generator, Set
 
 

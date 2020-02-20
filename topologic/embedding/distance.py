@@ -1,8 +1,3 @@
-"""
-The distance module has aliased 2 functions that come from `Scipy <https://docs.scipy.org>`_,
-`cosine <https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.cosine.html>`_,
-and `euclidean <https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.euclidean.html>`_
-"""
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
@@ -22,10 +17,45 @@ __all__ = [
 ]
 
 
-cosine = spatial.distance.cosine
+def cosine(first_vector: np.ndarray, second_vector: np.ndarray) -> float:
+    """
+    Distance function for two vectors of equal length.    
+    
+    `Cosine distance <https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.spatial.distance.cosine.html>`_    
+    
+    See also: https://en.wikipedia.org/wiki/Cosine_similarity
+    
+    :param numpy.ndarray first_vector: nonzero vector.  must be same length as second_vector
+    :param numpy.ndarray second_vector: nonzero vector.  must be same length as first_vector
+    :return: cosine distance - Resulting range is between 0 and 2.  Values closer to 0 are more similar.  Values closer
+        to 2 are approaching total dissimilarity.
+    :rtype: float
+    :examples:
+        >>> cosine(np.array([1,3,5]), np.array([2,3,4]))        
+        0.026964528109766017
+    
+    """  # noqa:501
+    return spatial.distance.cosine(first_vector, second_vector)
 
 
-euclidean = spatial.distance.euclidean
+def euclidean(first_vector: np.ndarray, second_vector: np.ndarray) -> float:
+    """
+    Distance function for two vectors of equal length    
+     
+    `Euclidean distance <https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.spatial.distance.euclidean.html>`_    
+    
+    See also: https://en.wikipedia.org/wiki/Euclidean_distance
+    
+    :param numpy.ndarray first_vector: nonzero vector.  must be same length as second_vector
+    :param numpy.ndarray second_vector: nonzero vector.  must be same length as first_vector
+    :return: euclidean distance - Resulting range is a positive real number.  Values closer to 0 are more similar.
+    :rtype: float
+    :examples:
+        >>> euclidean(np.array([1,3,5]), np.array([2,3,4]))    
+        1.4142135623730951
+    
+    """  # noqa:501
+    return spatial.distance.euclidean(first_vector, second_vector)
 
 
 def mahalanobis(inverse_covariance: np.ndarray) -> Callable[[np.ndarray, np.ndarray], float]:
@@ -85,6 +115,7 @@ def vector_distance(
     Vector distance is a function that will do any distance function you would like on two vectors. This is most
     commonly used by changing the method parameter, as a string, from "cosine" to "euclidean" - allowing you to change
     your flow based on configuration not on code changes to the actual cosine and euclidean functions.
+
     :param np.ndarray first_vector: A 1d array-like (list, tuple, np.array) that represents the first vector
     :param np.ndarray second_vector: A 1d array-like (list, tuple, np.array) that represents the second vector
     :param method: Method can be any distance function that takes in 2 parameters. It can also be the string mapping

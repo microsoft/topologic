@@ -16,18 +16,18 @@ from .sample_methods import SampleMethod, sample_graph_by_edge_weight, sample_gr
 from .tsne import tsne
 
 __all__ = [
+    'adjacency_embedding',
     'EmbeddingContainer',
     'EmbeddingMethod',
-    'OutOfSampleEmbeddingContainer',
-    'SampleMethod',
-    'adjacency_embedding',
     'find_elbows',
     'generate_omnibus_matrix',
     'laplacian_embedding',
     'node2vec_embedding',
     'omnibus_embedding',
+    'OutOfSampleEmbeddingContainer',
     'pca',
     'sample_graph_by_edge_weight',
     'sample_graph_by_vertex_degree',
+    'SampleMethod',
     'tsne'
 ]

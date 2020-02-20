@@ -5,8 +5,7 @@ import networkx as nx
 import numpy as np
 from scipy.stats import rankdata
 
-from topologic import assertions
-from topologic.assertions import assert_is_graph
+from . import assertions
 
 
 def self_loop_augmentation(
@@ -28,7 +27,7 @@ def self_loop_augmentation(
     :return: The networkx Graph object that was modified in place.
     :rtype: networkx.Graph
     """
-    assert_is_graph(graph)
+    assertions.assert_is_graph(graph)
 
     vertices = graph.nodes()
 
@@ -66,7 +65,7 @@ def rank_edges(
     :param str weight_column: edge attribute that contains the weight value.  Default is `weight`
     :return: Updated graph with new weights between 0 and 2, exclusive.  Based on scipy.stats rankdata function.
     :rtype: networkx.Graph
-    :raise topologic.exceptions.UnweightedGraphException: if the graph not weighted by the provided `weight_column`
+    :raise UnweightedGraphException: if the graph not weighted by the provided `weight_column`
     :raise TypeError: If the `graph` provided is not an `nx.Graph`
     :examples:
         >>> g = nx.Graph()
