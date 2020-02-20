@@ -1,5 +1,5 @@
-topologic
-===========
+topologic Library Documentation
+=================================
 
 .. toctree::
    :maxdepth: 4

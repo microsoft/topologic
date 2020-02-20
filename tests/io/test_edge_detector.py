@@ -12,7 +12,7 @@ class TestEdgeDetector(unittest.TestCase):
     def test_find_likely_edges_tiny_graph(self):
         with open(data_file('tiny-graph.csv')) as csvfile:
             """Find likely edges using a tiny graph.  The graph is small enough to be validated by hand."""
-            result = tc.find_edges(make_graph_reader(csvfile), common_values_count=2, rare_values_count=2)
+            result = tc.io.find_edges(make_graph_reader(csvfile), common_values_count=2, rare_values_count=2)
 
             self.assertEqual(['date', 'emailFrom', 'emailTo', 'subject', 'replyCount'], result.column_names(),
                              'Column names are not correct')
@@ -37,7 +37,7 @@ class TestEdgeDetector(unittest.TestCase):
             Find likely edges using a tiny graph with tab-separated values.
             The graph is small enough to be validated by hand.
             """
-            result = tc.find_edges(
+            result = tc.io.find_edges(
                 make_graph_reader(tsvfile, dialect='excel-tab'),
                 common_values_count=2,
                 rare_values_count=2)
@@ -56,7 +56,7 @@ class TestEdgeDetector(unittest.TestCase):
         with open(data_file('tiny-graph-no-header.csv')) as csvfile:
             """Find likely edges using a tiny graph that does not contain a header row.
               The graph is small enough to be validated by hand."""
-            result = tc.find_edges(
+            result = tc.io.find_edges(
                 make_graph_reader(csvfile, has_header_row=False),
                 common_values_count=2,
                 rare_values_count=2)
@@ -81,7 +81,7 @@ class TestEdgeDetector(unittest.TestCase):
     def test_find_likely_edges(self):
         with open(data_file('actor_bipartite_graph.csv')) as csvfile:
             """Find likely edges using a medium sized graph.  This CSV has a header row."""
-            result = tc.find_edges(make_graph_reader(csvfile))
+            result = tc.io.find_edges(make_graph_reader(csvfile))
 
             self.assertEqual(['Person', 'Movie', 'Role'], result.column_names(), 'Column names are not correct')
 
@@ -94,7 +94,7 @@ class TestEdgeDetector(unittest.TestCase):
         """Find likely edges using a medium sized graph.  In this CSV the columns have been reversed.  This ensures
         that the code is not order-dependent and has sorts the column names for easier comparison"""
         with open(data_file('actor_bipartite_graph_reordered.csv')) as csvfile:
-            result = tc.find_edges(make_graph_reader(csvfile))
+            result = tc.io.find_edges(make_graph_reader(csvfile))
 
             self.assertEqual(['Role', 'Movie', 'Person'], result.column_names(), 'Column names are not correct')
 

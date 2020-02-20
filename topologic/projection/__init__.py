@@ -42,9 +42,9 @@ from .edge_projections import edge_with_collection_metadata, edge_with_single_me
 from .vertex_projections import vertex_with_collection_metadata, vertex_with_single_metadata
 
 __all__ = [
+    "edge_ignore_metadata",
     "edge_with_collection_metadata",
     "edge_with_single_metadata",
-    "edge_ignore_metadata",
     "vertex_with_collection_metadata",
     "vertex_with_single_metadata"
 ]
