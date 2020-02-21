@@ -10,7 +10,7 @@ __all__: List[str] = ["version", "name"]
 name = "topologic"
 
 # manually updated
-__semver = "0.1.0"
+__semver = "0.1.1"
 #  full version (may be same as __semver on release)
 __version_file = "version.txt"
 

@@ -4,7 +4,14 @@
 [![PyPI](https://img.shields.io/pypi/v/topologic)](https://pypi.org/project/topologic/)
 
 ## Release Status
-Topologic is currently in pre-release as we clean up some final changes.
+Version 0.1.0 is released! 
+- [PyPI](https://pypi.org/project/topologic/)
+- [ReadTheDocs](https://topologic.readthedocs.io/)
+
+## Installation Instructions
+```python
+pip install topologic
+```
 
 ## Plans
 Merger with the [GraSPy](https://github.com/neurodata/graspy) library.
