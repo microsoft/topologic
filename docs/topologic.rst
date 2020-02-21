@@ -6,15 +6,19 @@ topologic package
    :undoc-members:
    :show-inheritance:
 
+
 Subpackages
 -----------
 
 .. toctree::
 
    topologic.embedding
+   topologic.embedding.clustering
+   topologic.embedding.distance
+   topologic.embedding.metric
    topologic.io
-   topologic.iterators
    topologic.partition
    topologic.projection
+   topologic.similarity
    topologic.statistics
 

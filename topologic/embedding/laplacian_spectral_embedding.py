@@ -1,15 +1,16 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
+from typing import Optional
+
 import networkx as nx
 import numpy as np
 import scipy as sp
-from typing import Optional
 
-from topologic import assertions
 from .embedding_container import EmbeddingContainer
 from .spectral_embedding import _create_augmented_adjacency_matrix, \
     _generate_embedding
+from .. import assertions
 
 
 def laplacian_embedding(

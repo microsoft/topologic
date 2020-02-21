@@ -1,15 +1,21 @@
 # Copyright (C) Microsoft Corporation. All rights reserved.
 import setuptools
+import sys
 import os
 
-# Python 3 + build tools are required to install this library. To install the
-# prerequisites on Ubuntu, run
-# sudo apt-get install build-essential python3 python3-dev python3-venv
 
-version_file_path = os.path.abspath("topologic/version.txt")
-exec(open('topologic/version.py').read())
+def handle_version() -> str:
+    sys.path.insert(0, os.path.join("topologic", "version"))
+    from version import version
+    sys.path.pop(0)
 
-version = get_version(version_file_path)
+    version_path = os.path.join("topologic", "version", "version.txt")
+    with open(version_path, "w") as version_file:
+        b = version_file.write(f"{version}")
+    return version
+
+
+version = handle_version()
 
 setuptools.setup(
     name="topologic",
@@ -19,13 +25,20 @@ setuptools.setup(
                 "processing networkx graph objects and statistical analysis over these objects.",
     version=version,
     packages=setuptools.find_packages(exclude=["tests", "tests.*", "tests/*"]),
-    package_data={'': ['version.txt']},
+    package_data={'version': [os.path.join('topologic', 'version', 'version.txt')]},
     include_package_data=True,
     author="Dwayne Pryce",
     author_email="dwpryce@microsoft.com",
+    license="MIT",
     classifiers=[
-        "Programming Language :: Python :: 3"
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License"
     ],
+    project_urls = {
+        "Github": "https://github.com/microsoft/topologic",
+        "Documentation": "https://topologic.readthedocs.io",
+    },
+    url="https://github.com/microsoft/topologic",
     install_requires=[
         'networkx',
         'python-louvain>=0.13',

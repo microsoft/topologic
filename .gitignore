@@ -120,3 +120,5 @@ venv.bak/
 
 .vscode/
 *.code-workspace
+
+!.github/build

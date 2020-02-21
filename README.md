@@ -1,9 +1,13 @@
 # Topologic
 
 [![Documentation Status](https://readthedocs.org/projects/topologic/badge/?version=latest)](https://topologic.readthedocs.io/en/latest/?badge=latest)
+[![PyPI](https://img.shields.io/pypi/v/topologic)](https://pypi.org/project/topologic/)
 
 ## Release Status
-Topologic has yet to be published to [PyPi](https://pypi.org/).
+Topologic is currently in pre-release as we clean up some final changes.
+
+## Plans
+Merger with the [GraSPy](https://github.com/neurodata/graspy) library.
 
 ## Bugs or Feature Requests
 Please file a new [issue](https://github.com/microsoft/topologic/issues/new) if you find any bugs, either in the code or the documentation.
