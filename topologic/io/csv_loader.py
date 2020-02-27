@@ -45,7 +45,7 @@ def from_dataset(
     :return: the graph object
     :rtype: nx.Graph
     """
-    if not graph:
+    if graph is None:
         graph = nx.Graph()
 
     projection_function = projection_function_generator(graph)
@@ -72,7 +72,8 @@ def from_file(
     vertex_csv_use_headers: Optional[List[str]] = None,
     vertex_metadata_behavior: str = "single",
     vertex_ignored_values: Optional[List[str]] = None,
-    sample_size: int = 50
+    sample_size: int = 50,
+    is_digraph: bool = False,
 ) -> nx.Graph:
     """
     This function weaves a lot of graph materialization code into a single call.
@@ -160,6 +161,7 @@ def from_file(
         Please note that this sample_size does NOT advance your underlying iterator, nor is there any guarantee that
         the csv Sniffer class will use every row extracted via sample_size.  Setting this above 50 may not have the
         impact you hope for due to the csv.Sniffer.has_header function - it will use at most 20 rows.
+    :param bool is_digraph: If the data represents an undirected graph or a directed graph. Default is `False`.
     :return: The graph populated graph
     :rtype: nx.Graph
     """
@@ -197,7 +199,8 @@ def from_file(
     if edge_projection_function is None:
         raise ValueError('edge_metadata_behavior must be "none", "collection", or "single"')
 
-    graph = from_dataset(edge_dataset, edge_projection_function)
+    graph = nx.DiGraph() if is_digraph else nx.Graph()
+    graph = from_dataset(edge_dataset, edge_projection_function, graph)
 
     if vertex_csv_file:
         if vertex_column_index is None:
