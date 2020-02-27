@@ -4,6 +4,7 @@
 import unittest
 
 import csv
+import networkx as nx
 from topologic.io import CsvDataset, from_dataset, from_file, load
 from topologic import projection
 from ..utils import data_file
@@ -140,6 +141,15 @@ class TestCsvLoaderFromDataset(unittest.TestCase):
                 {"lastName": "redhot", "sandwichPreference": "buffalo chicken"},
                 graph.nodes["frank"]["attributes"][0]
             )
+
+    def test_digraph_from_dataset(self):
+        digraph = nx.DiGraph()
+        with open(data_file("tiny-graph.csv")) as edge_file:
+            dataset = CsvDataset(edge_file, True, "excel")
+            proj = projection.edge_ignore_metadata(1, 2, 4)
+            graph = from_dataset(dataset, proj, digraph)
+
+        self.assertEqual(digraph, graph)
 
 
 class TestCsvLoaderFromFile(unittest.TestCase):
@@ -313,3 +323,16 @@ class TestCsvLoaderFromFile(unittest.TestCase):
                     {"lastName": "redhot", "sandwichPreference": "buffalo chicken"},
                     graph.nodes["frank"]["attributes"][0]
                 )
+
+    def test_digraph_from_file(self):
+        with open(data_file("tiny-graph.csv")) as edge_file:
+            graph = from_file(
+                edge_csv_file=edge_file,
+                source_column_index=1,
+                target_column_index=2,
+                weight_column_index=4,
+                edge_csv_has_headers=True,
+                is_digraph=True
+            )
+
+        self.assertTrue(graph.is_directed())
