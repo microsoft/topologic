@@ -21,11 +21,11 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
         self.assertIsInstance(matrix, np.ndarray)
         self.assertIsInstance(labels, list)
         self.assertEqual(2, matrix.ndim)
-        expected_matrix = np.array([[0.44095855],
-                                    [0.70710678],
-                                    [0.5527708]])
+        expected_matrix = np.array([[0.408248],
+                                    [0.707107],
+                                    [0.577350]])
         expected_label = ['a', 'b', 'c']
-        np.testing.assert_allclose(expected_matrix, matrix)
+        np.testing.assert_allclose(expected_matrix, matrix, rtol=1e-5)
         self.assertListEqual(expected_label, labels)
 
     def test_laplacian_embedding_elbowcut_none(self):
@@ -40,11 +40,11 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
         self.assertIsInstance(matrix, np.ndarray)
         self.assertIsInstance(labels, list)
         self.assertEqual(2, matrix.ndim)
-        expected_matrix = np.array([[0.44095855, 0.51959271],
-                                    [0.70710678, -0.06490658],
-                                    [0.5527708, -0.33146281]])
+        expected_matrix = np.array([[0.408248, 0.421637],
+                                    [0.707107, -0.365148],
+                                    [0.57735, 0.149071]])
         expected_label = ['a', 'b', 'c']
-        np.testing.assert_allclose(expected_matrix, matrix)
+        np.testing.assert_allclose(expected_matrix, matrix, rtol=1e-5)
         self.assertListEqual(expected_label, labels)
 
     def test_laplacian_embedding_gpickle(self):
