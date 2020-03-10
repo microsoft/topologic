@@ -29,7 +29,7 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
         self.assertListEqual(expected_label, labels)
 
     def test_laplacian_embedding_elbowcut_none(self):
-        graph = nx.Graph([('a', 'b', {'weight': 1.0}), ('b', 'c', {'weight': 2.0})])
+        graph = nx.Graph([('a', 'b', {'weight': 2.0}), ('b', 'c', {'weight': 2.0})])
         result = laplacian_embedding(
             graph,
             elbow_cut=None,
@@ -40,9 +40,9 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
         self.assertIsInstance(matrix, np.ndarray)
         self.assertIsInstance(labels, list)
         self.assertEqual(2, matrix.ndim)
-        expected_matrix = np.array([[0.408248, 0.421637],
-                                    [0.707107, -0.365148],
-                                    [0.57735, 0.149071]])
+        expected_matrix = np.array([[5.000000e-01, 4.714045e-01],
+                                    [7.071068e-01, -3.333333e-01],
+                                    [5.000000e-01, -1.425006e-16]])
         expected_label = ['a', 'b', 'c']
         np.testing.assert_allclose(expected_matrix, matrix, rtol=1e-5)
         self.assertListEqual(expected_label, labels)
