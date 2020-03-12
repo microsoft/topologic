@@ -1,10 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
+import pickle
+import sys
 import unittest
+
 import networkx as nx
 import numpy as np
-import pickle
+import pytest
+
 from topologic.embedding import laplacian_embedding
 
 
@@ -29,6 +33,9 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
         self.assertListEqual(expected_label, labels)
 
     def test_laplacian_embedding_elbowcut_none(self):
+        if sys.platform.startswith('darwin'):
+            pytest.skip('Test not supported on Mac OS')
+
         graph = nx.Graph([('a', 'b', {'weight': 2.0}), ('b', 'c', {'weight': 2.0})])
         result = laplacian_embedding(
             graph,
