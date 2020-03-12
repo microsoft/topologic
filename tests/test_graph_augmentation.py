@@ -61,7 +61,7 @@ class TestDiagonalAugmentation(unittest.TestCase):
         )
 
     def test_directed_averages_in_out_edge_weights(self):
-        start_adajacency = np.array(
+        start_adjacency = np.array(
             [
                 [0, 1, -1, 0, 0],
                 [0, 0, 0, 2, 1],
@@ -78,7 +78,7 @@ class TestDiagonalAugmentation(unittest.TestCase):
             [0, 0, 1, 0, .375],
         ]
 
-        g = diagonal_augmentation(nx.DiGraph(start_adajacency))
+        g = diagonal_augmentation(nx.DiGraph(start_adjacency))
         augmented_adjacency = nx.adj_matrix(g).todense()
 
         np.testing.assert_array_equal(
