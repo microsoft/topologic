@@ -21,9 +21,9 @@ class TestAdjacencySpectralEmbedding(unittest.TestCase):
         self.assertIsInstance(matrix, np.ndarray)
         self.assertIsInstance(labels, list)
         self.assertEqual(2, matrix.ndim)
-        expected_matrix = np.array([[0.43445175],
-                                    [1.14794954],
-                                    [0.8689035]])
+        expected_matrix = np.array([[0.385095],
+                                    [1.140718],
+                                    [0.926595]])
         expected_label = ['a', 'b', 'c']
         np.testing.assert_allclose(expected_matrix, matrix, rtol=1e-6)
         self.assertListEqual(expected_label, labels)
@@ -40,11 +40,11 @@ class TestAdjacencySpectralEmbedding(unittest.TestCase):
         self.assertIsInstance(matrix, np.ndarray)
         self.assertIsInstance(labels, list)
         self.assertEqual(2, matrix.ndim)
-        expected_matrix = np.array([[0.43445175, 0.29790657],
-                                    [1.14794954, -0.56372701],
-                                    [0.8689035, 0.59581314]])
+        expected_matrix = np.array([[0.385095, -0.351718],
+                                    [1.140718, 0.552094],
+                                    [0.926595, -0.5335]])
         expected_label = ['a', 'b', 'c']
-        np.testing.assert_allclose(expected_matrix, matrix, rtol=1e-6)
+        np.testing.assert_allclose(expected_matrix, matrix, rtol=1e-5)
         self.assertListEqual(expected_label, labels)
 
     def test_adjacency_embedding_gpickle(self):

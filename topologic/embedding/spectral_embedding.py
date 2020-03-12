@@ -9,7 +9,7 @@ from sklearn.utils.extmath import randomized_svd
 
 from .elbow_finder import find_elbows
 from ..graph_augmentation import rank_edges, \
-    self_loop_augmentation
+    diagonal_augmentation
 
 
 def _create_augmented_adjacency_matrix(weight_column, working_graph):
@@ -17,7 +17,7 @@ def _create_augmented_adjacency_matrix(weight_column, working_graph):
     ranked_graph = rank_edges(working_graph, weight_column)
 
     logging.debug("add self loops and sensible weights")
-    augmented_graph = self_loop_augmentation(ranked_graph, weight_column)
+    augmented_graph = diagonal_augmentation(ranked_graph, weight_column)
 
     sorted_vertices = sorted(augmented_graph.nodes())
     graph_matrix = nx.to_scipy_sparse_matrix(augmented_graph, nodelist=sorted_vertices)
