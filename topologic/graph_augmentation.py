@@ -85,7 +85,7 @@ def rank_edges(
     """
     assertions.assert_is_weighted_graph(graph, weight_column)
 
-    edge_count = len(graph.edges)
+    edge_count = len(graph.edges())
     edge_data = graph.edges(data=True)
     edges = np.array(
         list(
