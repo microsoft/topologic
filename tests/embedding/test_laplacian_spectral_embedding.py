@@ -5,7 +5,6 @@ import pickle
 import os
 import sys
 import unittest
-import warnings
 
 import networkx as nx
 import numpy as np
