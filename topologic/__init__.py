@@ -11,7 +11,7 @@ from .connected_components import number_connected_components, \
     largest_connected_component, \
     connected_components_generator
 from .partitioned_graph import PartitionedGraph
-from .graph_augmentation import rank_edges, self_loop_augmentation
+from .graph_augmentation import rank_edges, diagonal_augmentation
 
 from . import similarity
 from . import io
@@ -27,6 +27,6 @@ __all__ = [
     'largest_connected_component',
     'number_connected_components',
     'PartitionedGraph',
-    'self_loop_augmentation',
+    'diagonal_augmentation',
     'UnweightedGraphError'
 ]

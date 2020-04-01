@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
+from typing import Union
+
 import networkx as nx
 import numpy as np
 from scipy.stats import rankdata
@@ -8,24 +10,22 @@ from scipy.stats import rankdata
 from . import assertions
 
 
-def self_loop_augmentation(
-        graph: nx.classes.graph.Graph,
+def diagonal_augmentation(
+        graph: Union[nx.Graph, nx.DiGraph],
         weight_column: str = 'weight'
 ) -> nx.Graph:
     """
-    Generates a self loop for each vertex in the graph with a generated weight for each vertex that is the ratio
-    between its degree in the graph and the total number of *other* vertices in the graph, excluding the original
-    self loop.
-
-    This should be used prior to Spectral Embedding techniques to ensure that there is a reasonable value for
-    each vertex as it will appear in an adjacency matrix.
+    Replaces the diagonal of adjacency matrix of the graph with the
+    weighted degree / number of vertices in graph. For directed graphs,
+    the weighted in and out degree is averaged.
 
     Modifies the provided graph in place as well as returning it.
 
-    :param networkx.Graph graph: The networkx graph to diagonally augment
-    :param str weight_column: The weight column to augment
-    :return: The networkx Graph object that was modified in place.
-    :rtype: networkx.Graph
+    :param: The networkx graph which will get a replaced diagonal
+    :type graph: Union[nx.Graph, nx.DiGraph]
+    :param str weight_column: The weight column of the edge
+    :return: The networkx Graph or DiGraph object that was modified in place.
+    :rtype: Union[nx.Graph, nx.DiGraph]
     """
     assertions.assert_is_graph(graph)
 
@@ -38,11 +38,16 @@ def self_loop_augmentation(
         if graph.has_edge(vertex, vertex):
             graph.remove_edge(vertex, vertex)
 
-        degree = graph.degree(vertex)
+        if isinstance(graph, nx.DiGraph):
+            in_degree = graph.in_degree(vertex, weight=weight_column)
+            out_degree = graph.out_degree(vertex, weight=weight_column)
+            weighted_degree = (in_degree + out_degree) / 2
+        else:
+            weighted_degree = graph.degree(vertex, weight=weight_column)
 
         # add the augmented weight back onto the diagonal
         graph.add_edge(vertex, vertex)
-        graph[vertex][vertex][weight_column] = degree / (vertex_count - 1)
+        graph[vertex][vertex][weight_column] = weighted_degree / (vertex_count - 1)
 
     return graph
 
@@ -80,7 +85,7 @@ def rank_edges(
     """
     assertions.assert_is_weighted_graph(graph, weight_column)
 
-    edge_count = len(graph.edges)
+    edge_count = len(graph.edges())
     edge_data = graph.edges(data=True)
     edges = np.array(
         list(

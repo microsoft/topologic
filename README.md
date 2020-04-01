@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/topologic)](https://pypi.org/project/topologic/)
 
 ## Release Status
-Version 0.1.0 is released! 
+Version 0.1.1 is released! 
 - [PyPI](https://pypi.org/project/topologic/)
 - [ReadTheDocs](https://topologic.readthedocs.io/)
 

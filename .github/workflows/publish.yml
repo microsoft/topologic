@@ -36,7 +36,9 @@ jobs:
         flake8 ./topologic ./tests --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest tests topologic --doctest-modules
+        pytest -v tests topologic --doctest-modules
+      env:
+        SKIP_TEST_35: true
     - name: Generate docs with Sphinx
       run: |
         sphinx-build -W -a docs/ docs/_build/html

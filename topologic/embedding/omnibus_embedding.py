@@ -14,7 +14,7 @@ from .spectral_embedding import _generate_embedding
 from ..connected_components import largest_connected_component
 from ..embedding import EmbeddingMethod
 from ..graph_augmentation import rank_edges, \
-    self_loop_augmentation
+    diagonal_augmentation
 
 
 def omnibus_embedding(
@@ -94,7 +94,7 @@ def omnibus_embedding(
 
     starting_graph = largest_connected_component(graphs[0])
     starting_graph = rank_edges(starting_graph)
-    starting_graph = self_loop_augmentation(starting_graph)
+    starting_graph = diagonal_augmentation(starting_graph)
 
     previous_graph = starting_graph
     count = 1
@@ -104,7 +104,7 @@ def omnibus_embedding(
         count = count + 1
         current_graph = largest_connected_component(graph)
         current_graph = rank_edges(current_graph)
-        current_graph = self_loop_augmentation(current_graph)
+        current_graph = diagonal_augmentation(current_graph)
 
         pairwise_graphs = [previous_graph] + [current_graph]
         pairwise_graphs_reduced = _reduce_to_common_nodes(pairwise_graphs)
