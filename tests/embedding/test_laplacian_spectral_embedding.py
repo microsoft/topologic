@@ -34,6 +34,7 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
         self.assertListEqual(expected_label, labels)
 
     def test_laplacian_embedding_elbowcut_none(self):
+        print(f"{sys.platform} and {os.getenv('SKIP_TEST_35', 'false')}")
         if sys.platform.startswith('darwin') and os.getenv("SKIP_TEST_35", "false") == "true":
             message = 'Test not supported on Mac OS + Github Actions, see: ' \
                       'https://github.com/microsoft/topologic/issues/35'
