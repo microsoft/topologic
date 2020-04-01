@@ -33,14 +33,11 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
         np.testing.assert_allclose(expected_matrix, matrix, rtol=1e-5)
         self.assertListEqual(expected_label, labels)
 
+    @unittest.skipIf(
+        sys.platform.startswith('darwin') and os.getenv("SKIP_TEST_35", "false") == "true",
+        "Test not supported on MacOS Github Actions, see: https://github.com/microsoft/topologic/issues/35"
+    )
     def test_laplacian_embedding_elbowcut_none(self):
-        print(f"{sys.platform} and {os.getenv('SKIP_TEST_35', 'false')}")
-        if sys.platform.startswith('darwin') and os.getenv("SKIP_TEST_35", "false") == "true":
-            message = 'Test not supported on Mac OS + Github Actions, see: ' \
-                      'https://github.com/microsoft/topologic/issues/35'
-            warnings.warn(message)
-            unittest.skip(message)
-
         graph = nx.Graph([('a', 'b', {'weight': 2.0}), ('b', 'c', {'weight': 2.0})])
         result = laplacian_embedding(
             graph,
@@ -67,3 +64,7 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
 
         np.testing.assert_array_equal(result.embedding, unpickled.embedding)
         np.testing.assert_array_equal(result.vertex_labels, unpickled.vertex_labels)
+
+
+def skip_35() -> bool:
+    return sys.platform.startswith('darwin') and os.getenv("SKIP_TEST_35", "false") == "true"

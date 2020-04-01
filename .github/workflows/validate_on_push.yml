@@ -34,7 +34,7 @@ jobs:
         flake8 ./topologic ./tests --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        SKIP_TEST_35=true pytest tests topologic --doctest-modules
+        SKIP_TEST_35=true pytest -v tests topologic --doctest-modules
     - name: Build with setuptools
       run: |
         python setup.py build sdist
