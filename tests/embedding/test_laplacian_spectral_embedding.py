@@ -63,7 +63,3 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
 
         np.testing.assert_array_equal(result.embedding, unpickled.embedding)
         np.testing.assert_array_equal(result.vertex_labels, unpickled.vertex_labels)
-
-
-def skip_35() -> bool:
-    return sys.platform.startswith('darwin') and os.getenv("SKIP_TEST_35", "false") == "true"
