@@ -2,12 +2,13 @@
 # Licensed under the MIT license.
 
 import pickle
+import os
 import sys
 import unittest
+import warnings
 
 import networkx as nx
 import numpy as np
-import pytest
 
 from topologic.embedding import laplacian_embedding
 
@@ -33,8 +34,11 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
         self.assertListEqual(expected_label, labels)
 
     def test_laplacian_embedding_elbowcut_none(self):
-        if sys.platform.startswith('darwin'):
-            pytest.skip('Test not supported on Mac OS')
+        if sys.platform.startswith('darwin') and os.getenv("SKIP_TEST_35", "false") == "true":
+            message = 'Test not supported on Mac OS + Github Actions, see: ' \
+                      'https://github.com/microsoft/topologic/issues/35'
+            warnings.warn(message)
+            unittest.skip(message)
 
         graph = nx.Graph([('a', 'b', {'weight': 2.0}), ('b', 'c', {'weight': 2.0})])
         result = laplacian_embedding(
