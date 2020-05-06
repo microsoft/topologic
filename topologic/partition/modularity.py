@@ -118,6 +118,8 @@ def modularity_components(
 
     total_edge_weight = 0.0
 
+    communities = set(partitions.values())
+
     degree_sums_within_community: Dict[int, float] = defaultdict(lambda: 0.0)
     degree_sums_for_community: Dict[int, float] = defaultdict(lambda: 0.0)
     for vertex, neighbor_vertex, weight in graph.edges(data=weight_attribute):
@@ -136,4 +138,4 @@ def modularity_components(
         degree_sums_for_community[comm],
         total_edge_weight,
         resolution
-    ) for comm in degree_sums_for_community.keys()}
+    ) for comm in communities}

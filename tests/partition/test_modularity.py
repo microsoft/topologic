@@ -64,6 +64,11 @@ class TestModularity(unittest.TestCase):
                 vertex, comm = line.strip().split(",")
                 partitions[vertex] = int(comm)
 
+        partition_count = max(partitions.values())
+
+        graph.add_node("disconnected_node")
+        partitions["disconnected_node"] = partition_count + 1
+
         components = modularity_components(graph, partitions)
 
         # from python louvain
@@ -71,6 +76,7 @@ class TestModularity(unittest.TestCase):
         total_modularity = sum(components.values())
 
         self.assertSetEqual(set(components.keys()), set(partitions.values()))
+        self.assertEqual(0, components[partition_count + 1])
 
         # the following test is not super inspiring. I am not a floating point number specialist, but as far as I can
         # tell it's because networkx.Graph().degree() returns 2 times the edge weight for each value, which
