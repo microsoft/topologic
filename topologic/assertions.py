@@ -88,3 +88,14 @@ def validate_minimal_graph(
         raise ValueError("The graph provided has no edges")
     if not nx.is_weighted(graph, weight=weight_attribute):
         raise ValueError("The graph provided is not fully weighted")
+
+
+def assert_is_undirected(graph: nx.Graph):
+    """
+    Asserts that an object is an undirected graph
+
+    :param graph: Graph to check
+    :raises ValueError: If a graph is not an undirected graph
+    """
+    if graph.is_directed():
+        raise ValueError("graph must be an undirected graph")
