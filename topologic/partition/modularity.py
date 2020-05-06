@@ -34,7 +34,10 @@ def q_score(
     :return: q_score, or modularity, of this graph using the provided partitioning scheme.
     :rtype: float
     """
-    warnings.warn("topologic.partition.q_score() has been deprecated in favor of topologic.partition.modularity()", DeprecationWarning)
+    warnings.warn(
+        "topologic.partition.q_score() has been deprecated in favor of topologic.partition.modularity()",
+        DeprecationWarning
+    )
     if isinstance(partitioned_graph, PartitionedGraph):
         partition = partitioned_graph.community_partitions
         extracted_graph = partitioned_graph.graph
@@ -97,10 +100,11 @@ def modularity_components(
     Given an undirected, weighted graph and a community partition dictionary, calculates a modularity quantum for each
     community ID. The sum of these quanta is the modularity of the graph and partitions provided.
 
-    :param nx.Graph graph:
-    :param Dict[Any, int] partitions:
-    :param str weight_attribute:
-    :param float resolution:
+    :param nx.Graph graph: An undirected graph
+    :param Dict[Any, int] partitions: A dictionary representing a community partitioning scheme with the keys being the
+        vertex and the value being a community id. Within topologic, these community ids are required to be ints.
+    :param str weight_attribute: The edge data attribute on the graph that contains a float weight for the edge.
+    :param float resolution: The resolution to use when calculating the modularity.
     :return: A dictionary of the community id to the modularity component of that community
     :rtype: Dict[int, float]
     :raise TypeError: If the graph is not a networkx Graph
