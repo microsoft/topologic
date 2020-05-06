@@ -52,7 +52,7 @@ setuptools.setup(
             'pytest',
             'flake8',
             'mypy',
-            'sphinx',
+            'sphinx>=2.4.4,<3.0.0',
             'sphinx-rtd-theme',
             'testfixtures',
             'recommonmark'
