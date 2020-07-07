@@ -78,8 +78,4 @@ class TestModularity(unittest.TestCase):
         self.assertSetEqual(set(components.keys()), set(partitions.values()))
         self.assertEqual(0, components[partition_count + 1])
 
-        # the following test is not super inspiring. I am not a floating point number specialist, but as far as I can
-        # tell it's because networkx.Graph().degree() returns 2 times the edge weight for each value, which
-        # we then divide by 2.0 immediately and sum, whereas in our version we don't do this step.
-        # aside from (not) doing that, the only other difference is using math.pow instead of `**`.
-        np.testing.assert_almost_equal(community_modularity, total_modularity, decimal=3)
+        np.testing.assert_almost_equal(community_modularity, total_modularity, decimal=8)

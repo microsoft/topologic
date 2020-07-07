@@ -79,22 +79,20 @@ def modularity(
 
 
 def _modularity_component(
-    degree_sum_within_community: float,
-    degree_sum: float,
-    total_network_edge_weight: float,
+    intra_community_degree: float,
+    total_community_degree: float,
+    network_degree_sum: float,
     resolution: float
 ) -> float:
-    degree_within_community_ratio = degree_sum_within_community / total_network_edge_weight
-    community_degree_ratio = math.pow(degree_sum / (2.0 * total_network_edge_weight), 2.0)
-
-    return degree_within_community_ratio - resolution * community_degree_ratio
+    community_degree_ratio = math.pow(total_community_degree, 2.0) / (2.0 * network_degree_sum)
+    return (intra_community_degree - resolution * community_degree_ratio) / (2.0 * network_degree_sum)
 
 
 def modularity_components(
     graph: nx.Graph,
     partitions: Dict[Any, int],
     weight_attribute: str = "weight",
-    resolution: float = 1.0
+    resolution: float = 1.0,
 ) -> Dict[int, float]:
     """
     Given an undirected, weighted graph and a community partition dictionary, calculates a modularity quantum for each
@@ -127,10 +125,11 @@ def modularity_components(
         neighbor_community = partitions[neighbor_vertex]
         if vertex_community == neighbor_community:
             if vertex == neighbor_vertex:
-                degree_sums_within_community[vertex_community] += weight * 2.0
-            else:
                 degree_sums_within_community[vertex_community] += weight
-        degree_sums_for_community[vertex_community] += weight * 2.0
+            else:
+                degree_sums_within_community[vertex_community] += weight * 2.0
+        degree_sums_for_community[vertex_community] += weight
+        degree_sums_for_community[neighbor_community] += weight
         total_edge_weight += weight
 
     return {comm: _modularity_component(
