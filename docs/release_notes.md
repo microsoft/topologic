@@ -1,4 +1,6 @@
 # Release Notes
+## 0.1.3
+- Added `modularity` and `modularity_components` functions, and deprecated `q_score`.
 ## 0.1.2
 - Rename `self_loop_augmentation` to `diagonal_augmentation` and use weighted degree to perform calculation instead of degree only.
 - Fix bug when getting the length of edges when performing graph augmentations.
