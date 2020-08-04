@@ -72,10 +72,16 @@ def laplacian_embedding(
     minimum_matrix_dimension = min(graph_matrix.shape)
 
     # make Laplacian matrix (DAD)
-    degree = graph_matrix.sum(axis=1).T.astype(float)
-    degree_array = np.squeeze(np.asarray(degree))
-    diagonal = sp.sparse.diags(degree_array ** (-0.5))
-    lse_matrix = diagonal.dot(graph_matrix).dot(diagonal)
+    in_degree = graph_matrix.sum(axis=0).astype(float)
+    out_degree = graph_matrix.sum(axis=1).T.astype(float)
+
+    in_degree_array = np.squeeze(np.asarray(in_degree))
+    out_degree_array = np.squeeze(np.asarray(out_degree))
+
+    in_diagonal = sp.sparse.diags(in_degree_array ** (-0.5))
+    out_diagonal = sp.sparse.diags(out_degree_array ** (-0.5))
+
+    lse_matrix = out_diagonal.dot(graph_matrix).dot(in_diagonal)
 
     embedding = _generate_embedding(
         elbow_cut,
