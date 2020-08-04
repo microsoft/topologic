@@ -1,4 +1,6 @@
 # Release Notes
+## 0.1.4
+- Fixed a bug during Laplacian matrix construction for directed graphs
 ## 0.1.3
 - Added `modularity` and `modularity_components` functions, and deprecated `q_score`.
 ## 0.1.2
