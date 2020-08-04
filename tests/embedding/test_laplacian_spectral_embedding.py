@@ -15,11 +15,13 @@ from topologic.embedding import laplacian_embedding
 class TestLaplacianSpectralEmbedding(unittest.TestCase):
     def test_laplacian_embedding(self):
         graph = nx.Graph([('a', 'b', {'weight': 1.0}), ('b', 'c', {'weight': 2.0})])
+
         result = laplacian_embedding(
             graph,
             elbow_cut=1,
             svd_seed=1234
         )
+
         self.assertIsNotNone(result)
         (matrix, labels) = result
         self.assertIsInstance(matrix, np.ndarray)
@@ -28,6 +30,27 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
         expected_matrix = np.array([[0.408248],
                                     [0.707107],
                                     [0.577350]])
+        expected_label = ['a', 'b', 'c']
+        np.testing.assert_allclose(expected_matrix, matrix, rtol=1e-5)
+        self.assertListEqual(expected_label, labels)
+
+    def test_laplacian_embedding_digraph(self):
+        graph = nx.DiGraph([('a', 'b', {'weight': 1.0}), ('b', 'c', {'weight': 2.0})])
+
+        result = laplacian_embedding(
+            graph,
+            elbow_cut=1,
+            svd_seed=1234
+        )
+
+        self.assertIsNotNone(result)
+        (matrix, labels) = result
+        self.assertIsInstance(matrix, np.ndarray)
+        self.assertIsInstance(labels, list)
+        self.assertEqual(2, matrix.ndim)
+        expected_matrix = np.array([[0.527046, 0.235702],
+                                    [0.781736, 0.62361 ],
+                                    [0.333333, 0.745356]])
         expected_label = ['a', 'b', 'c']
         np.testing.assert_allclose(expected_matrix, matrix, rtol=1e-5)
         self.assertListEqual(expected_label, labels)
