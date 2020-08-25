@@ -207,11 +207,16 @@ def _get_laplacian_matrices(graphs):
 
 
 def _get_lse_matrix(adjacency_matrix: np.ndarray):
-    degree = adjacency_matrix.sum(axis=1).T.astype(float)
-    degree_array = np.squeeze(np.asarray(degree))
-    diagonal = sp.sparse.diags(degree_array ** -.5)
+    in_degree = adjacency_matrix.sum(axis=0).astype(float)
+    out_degree = adjacency_matrix.sum(axis=1).T.astype(float)
 
-    lse_matrix = diagonal.dot(adjacency_matrix).dot(diagonal)
+    in_degree_array = np.squeeze(np.asarray(in_degree))
+    out_degree_array = np.squeeze(np.asarray(out_degree))
+
+    in_diagonal = sp.sparse.diags(in_degree_array ** (-0.5))
+    out_diagonal = sp.sparse.diags(out_degree_array ** (-0.5))
+
+    lse_matrix = out_diagonal.dot(adjacency_matrix).dot(in_diagonal)
 
     return lse_matrix
 
