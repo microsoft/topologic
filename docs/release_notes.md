@@ -1,4 +1,6 @@
 # Release Notes
+## 0.1.5
+- Fix a bug in omnibus embedding where augmentation happened before the graphs were reduced to common nodes
 ## 0.1.4
 - Fixed a bug during Laplacian matrix construction for directed graphs
 ## 0.1.3
