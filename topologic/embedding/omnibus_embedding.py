@@ -92,22 +92,22 @@ def omnibus_embedding(
 
     embedding_containers = []
 
-    starting_graph = largest_connected_component(graphs[0])
-    starting_graph = rank_edges(starting_graph)
-    starting_graph = diagonal_augmentation(starting_graph)
+    previous_graph = largest_connected_component(graphs[0])
 
-    previous_graph = starting_graph
     count = 1
-
     for graph in graphs[1:]:
         logging.debug(f'Calculating omni for graph {count} of {len(graphs) - 1}')
         count = count + 1
         current_graph = largest_connected_component(graph)
-        current_graph = rank_edges(current_graph)
-        current_graph = diagonal_augmentation(current_graph)
 
         pairwise_graphs = [previous_graph] + [current_graph]
         pairwise_graphs_reduced = _reduce_to_common_nodes(pairwise_graphs)
+
+        for i in range(len(pairwise_graphs_reduced)):
+            graph_to_augment = pairwise_graphs_reduced[i]
+            ranked_graph = rank_edges(graph_to_augment)
+            diagonal_augmented_graph = diagonal_augmentation(ranked_graph)
+            pairwise_graphs_reduced[i] = diagonal_augmented_graph
 
         labels, pairwise_matrices = get_matrices_function(pairwise_graphs_reduced)
         omnibus_matrix = generate_omnibus_matrix(pairwise_matrices)
