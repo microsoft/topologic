@@ -282,7 +282,7 @@ class _Node2VecGraph:
             norm_const = sum(unnormalized_probs)
             normalized_probs = [float(u_prob) / norm_const for u_prob in unnormalized_probs]
             alias_nodes[node] = _alias_setup(normalized_probs)
-        logging.info(f'Completed preprocessing of transition probabilities for vertices')
+        logging.info('Completed preprocessing of transition probabilities for vertices')
 
         alias_edges = {}
 
@@ -310,7 +310,7 @@ class _Node2VecGraph:
                 alias_edges[edge] = self._get_alias_edge(edge[0], edge[1])
                 alias_edges[(edge[1], edge[0])] = self._get_alias_edge(edge[1], edge[0])
 
-        logging.info(f'Completed preprocessing of transition probabilities for edges')
+        logging.info('Completed preprocessing of transition probabilities for edges')
 
         self.alias_nodes = alias_nodes
         self.alias_edges = alias_edges

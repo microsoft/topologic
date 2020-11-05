@@ -61,8 +61,8 @@ class CsvDataset:
         if dialect is None:
             if sample_blob is None:
                 raise DialectException(
-                    f"A dialect was not provided and one was not able to be sniffed; a sample was unable to be obtained"
-                    f" from the csv reader"
+                    "A dialect was not provided and one was not able to be sniffed; a sample was unable to be obtained"
+                    " from the csv reader"
                 )
             sniffed_dialect = csv.Sniffer().sniff(sample_blob)
             if sniffed_dialect is None:

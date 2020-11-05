@@ -43,7 +43,7 @@ def histogram_edge_weight(
 
     if len(none_weights) != 0:
         logger.warning(f"Graph contains {len(none_weights)} edges with no {weight_attribute}." +
-                       f" Histogram excludes these values.")
+                       " Histogram excludes these values.")
 
     histogram, bin_edges = np.histogram(
         actual_weights,
@@ -92,7 +92,7 @@ def cut_edges_by_weight(
 
     if len(none_weights) != 0:
         logger.warning(f"Graph contains {len(none_weights)} edges with no {weight_attribute}." +
-                       f"Ignoring these when cutting by weight")
+                       "Ignoring these when cutting by weight")
 
     filter_by = filter_function_for_make_cuts(cut_threshold, cut_process)
     edges_to_cut = [x for x in actual_weights if filter_by(x)]
