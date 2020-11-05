@@ -49,7 +49,7 @@ class TestLaplacianSpectralEmbedding(unittest.TestCase):
         self.assertIsInstance(labels, list)
         self.assertEqual(2, matrix.ndim)
         expected_matrix = np.array([[0.527046, 0.235702],
-                                    [0.781736, 0.62361 ],
+                                    [0.781736, 0.62361],
                                     [0.333333, 0.745356]])
         expected_label = ['a', 'b', 'c']
         np.testing.assert_allclose(expected_matrix, matrix, rtol=1e-5)
