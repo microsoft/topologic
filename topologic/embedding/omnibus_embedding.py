@@ -213,8 +213,14 @@ def _get_lse_matrix(adjacency_matrix: np.ndarray):
     in_degree_array = np.squeeze(np.asarray(in_degree))
     out_degree_array = np.squeeze(np.asarray(out_degree))
 
-    in_diagonal = sp.sparse.diags(in_degree_array ** (-0.5))
-    out_diagonal = sp.sparse.diags(out_degree_array ** (-0.5))
+    in_root = in_degree_array ** (-0.5)
+    out_root = out_degree_array ** (-0.5)
+    
+    in_root[np.isinf(in_root)] = 0
+    out_root[np.isinf(out_root)] = 0
+
+    in_diagonal = sp.sparse.diags(in_root)
+    out_diagonal = sp.sparse.diags(out_root)
 
     lse_matrix = out_diagonal.dot(adjacency_matrix).dot(in_diagonal)
 
