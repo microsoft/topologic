@@ -1,4 +1,6 @@
 # Release Notes
+## 0.1.6
+- Fix an issue that caused inf and nan when using LSE omnibus embedding
 ## 0.1.5
 - Fix a bug in omnibus embedding where augmentation happened before the graphs were reduced to common nodes
 ## 0.1.4
