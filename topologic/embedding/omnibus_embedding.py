@@ -96,11 +96,11 @@ def omnibus_embedding(
     # union graph lcc strategy
     union_graph = graphs[0].copy()
     for graph in graphs[1:]:
-        for s, t, w in graph.edges(data='weight'):
-            if union_graph.has_edge(s, t):
-                union_graph[s][t]['weight'] += w
+        for source, target, weight in graph.edges(data='weight'):
+            if union_graph.has_edge(source, target):
+                union_graph[source][target]['weight'] += weight
             else:
-                union_graph.add_edge(s, t, weight=w)
+                union_graph.add_edge(source, target, weight=weight)
 
     union_graph_lcc = largest_connected_component(union_graph)
     union_graph_lcc_nodes = union_graph_lcc.nodes()
@@ -113,15 +113,16 @@ def omnibus_embedding(
         count = count + 1
         current_graph = graph.copy()
 
-        remove_nodes_not_in_set_and_add_missing_nodes_in_set(previous_graph, union_graph_lcc_nodes)
-        remove_nodes_not_in_set_and_add_missing_nodes_in_set(current_graph, union_graph_lcc_nodes)
+        # reduce each graph so that the node set contains exactly the same nodes as union_graph_lcc_nodes
+        _sync_nodes(previous_graph, union_graph_lcc_nodes)
+        _sync_nodes(current_graph, union_graph_lcc_nodes)
 
         pairwise_graphs_reduced = [previous_graph, current_graph]
 
         for i in range(len(pairwise_graphs_reduced)):
             graph_to_augment = pairwise_graphs_reduced[i]
 
-            augmented_graph = augment_graph(graph_to_augment)
+            augmented_graph = _augment_graph(graph_to_augment)
 
             pairwise_graphs_reduced[i] = augmented_graph
 
@@ -153,14 +154,14 @@ def omnibus_embedding(
     return embedding_containers
 
 
-def augment_graph(graph_to_augment):
+def _augment_graph(graph_to_augment):
     ranked_graph = rank_edges(graph_to_augment)
     augmented_graph = diagonal_augmentation(ranked_graph)
 
     return augmented_graph
 
 
-def remove_nodes_not_in_set_and_add_missing_nodes_in_set(graph_to_reduce, set_of_valid_nodes):
+def _sync_nodes(graph_to_reduce, set_of_valid_nodes):
     to_remove = []
     for n in graph_to_reduce.nodes():
         if n not in set_of_valid_nodes:
