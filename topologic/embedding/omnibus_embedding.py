@@ -34,7 +34,8 @@ def omnibus_embedding(
     There should be exactly the same number of nodes in each graph with exactly the same labels. The list of graphs
     should represent a time series and should be in an order such that time is continuous through the list of graphs.
 
-    If the labels differ between each pair of graphs, then those nodes will _not_ be found in the resulting embedding.
+    If the labels differ between each pair of graphs, then those nodes will only be found in the resulting embedding
+    if they exist in the largest connected component of the union of all edges across all graphs in the time series.
 
     :param List[networkx.Graph] graphs: A list of graphs that will be used to generate the omnibus embedding. Each graph
         should have exactly the same vertices as each of the other graphs. The order of the graphs in the list matter.
@@ -221,14 +222,15 @@ def _get_unstacked_embeddings(embedding, graphs, labels):
 
 def _get_adjacency_matrices(graphs):
     matrices = []
-    labels = []
+    labels = set()
     for graph in graphs:
         sorted_nodes = sorted(graph.nodes())
         matrices.append(nx.to_scipy_sparse_matrix(graph, nodelist=sorted_nodes))
 
         for node in sorted_nodes:
-            labels.append(node)
-    return labels, matrices
+            labels.add(node)
+
+    return list(labels), matrices
 
 
 def _get_laplacian_matrices(graphs):
