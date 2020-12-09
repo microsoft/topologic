@@ -1,4 +1,6 @@
 # Release Notes
+## 0.1.7
+- Use the union graph largest connected component strategy to calculate the omnibus embedding
 ## 0.1.6
 - Fix an issue that caused inf and nan when using LSE omnibus embedding
 ## 0.1.5
