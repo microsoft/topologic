@@ -34,7 +34,8 @@ def omnibus_embedding(
     There should be exactly the same number of nodes in each graph with exactly the same labels. The list of graphs
     should represent a time series and should be in an order such that time is continuous through the list of graphs.
 
-    If the labels differ between each pair of graphs, then those nodes will _not_ be found in the resulting embedding.
+    If the labels differ between each pair of graphs, then those nodes will only be found in the resulting embedding
+    if they exist in the largest connected component of the union of all edges across all graphs in the time series.
 
     :param List[networkx.Graph] graphs: A list of graphs that will be used to generate the omnibus embedding. Each graph
         should have exactly the same vertices as each of the other graphs. The order of the graphs in the list matter.
@@ -92,22 +93,38 @@ def omnibus_embedding(
 
     embedding_containers = []
 
-    previous_graph = largest_connected_component(graphs[0])
+    # union graph lcc strategy
+    union_graph = graphs[0].copy()
+    for graph in graphs[1:]:
+        for source, target, weight in graph.edges(data='weight'):
+            if union_graph.has_edge(source, target):
+                union_graph[source][target]['weight'] += weight
+            else:
+                union_graph.add_edge(source, target, weight=weight)
+
+    union_graph_lcc = largest_connected_component(union_graph)
+    union_graph_lcc_nodes = union_graph_lcc.nodes()
+
+    previous_graph = graphs[0].copy()
 
     count = 1
     for graph in graphs[1:]:
         logging.debug(f'Calculating omni for graph {count} of {len(graphs) - 1}')
         count = count + 1
-        current_graph = largest_connected_component(graph)
+        current_graph = graph.copy()
 
-        pairwise_graphs = [previous_graph] + [current_graph]
-        pairwise_graphs_reduced = _reduce_to_common_nodes(pairwise_graphs)
+        # reduce each graph so that the node set contains exactly the same nodes as union_graph_lcc_nodes
+        _sync_nodes(previous_graph, union_graph_lcc_nodes)
+        _sync_nodes(current_graph, union_graph_lcc_nodes)
+
+        pairwise_graphs_reduced = [previous_graph, current_graph]
 
         for i in range(len(pairwise_graphs_reduced)):
             graph_to_augment = pairwise_graphs_reduced[i]
-            ranked_graph = rank_edges(graph_to_augment)
-            diagonal_augmented_graph = diagonal_augmentation(ranked_graph)
-            pairwise_graphs_reduced[i] = diagonal_augmented_graph
+
+            augmented_graph = _augment_graph(graph_to_augment)
+
+            pairwise_graphs_reduced[i] = augmented_graph
 
         labels, pairwise_matrices = get_matrices_function(pairwise_graphs_reduced)
         omnibus_matrix = generate_omnibus_matrix(pairwise_matrices)
@@ -135,6 +152,26 @@ def omnibus_embedding(
         )
 
     return embedding_containers
+
+
+def _augment_graph(graph_to_augment):
+    ranked_graph = rank_edges(graph_to_augment)
+    augmented_graph = diagonal_augmentation(ranked_graph)
+
+    return augmented_graph
+
+
+def _sync_nodes(graph_to_reduce, set_of_valid_nodes):
+    to_remove = []
+    for n in graph_to_reduce.nodes():
+        if n not in set_of_valid_nodes:
+            to_remove.append(n)
+
+    graph_to_reduce.remove_nodes_from(to_remove)
+
+    for node in set_of_valid_nodes:
+        if not graph_to_reduce.has_node(node):
+            graph_to_reduce.add_node(node)
 
 
 def _reduce_to_common_nodes(graphs: List[nx.Graph]):
@@ -186,14 +223,15 @@ def _get_unstacked_embeddings(embedding, graphs, labels):
 
 def _get_adjacency_matrices(graphs):
     matrices = []
-    labels = []
+    labels = set()
     for graph in graphs:
         sorted_nodes = sorted(graph.nodes())
         matrices.append(nx.to_scipy_sparse_matrix(graph, nodelist=sorted_nodes))
 
         for node in sorted_nodes:
-            labels.append(node)
-    return labels, matrices
+            labels.add(node)
+
+    return list(labels), matrices
 
 
 def _get_laplacian_matrices(graphs):
@@ -215,7 +253,7 @@ def _get_lse_matrix(adjacency_matrix: np.ndarray):
 
     in_root = in_degree_array ** (-0.5)
     out_root = out_degree_array ** (-0.5)
-    
+
     in_root[np.isinf(in_root)] = 0
     out_root[np.isinf(out_root)] = 0
 

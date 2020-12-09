@@ -115,7 +115,36 @@ class TestOmnibusEmbedding(unittest.TestCase):
             )
         )
 
-    def test_med_cohort_graph_generates_embedding(self):
+    def test_union_lcc_returns_expected_shape(self):
+        first = nx.Graph()
+        first.add_edge(0, 1, weight=1)
+        first.add_edge(1, 2, weight=1)
+        # node 3 and 4 will exist in the union LCC as there is an edge that connects them to the
+        # LCC of the union of all edges in first, second
+        first.add_edge(3, 4, weight=1)
+        # node 5 will not appear in the embedding as it is not in the LCC of the union edges
+        first.add_edge(5, 5, weight=1)
+
+        second = nx.Graph()
+        second.add_edge(0, 1, weight=1)
+        second.add_edge(1, 2, weight=1)
+        second.add_edge(3, 1, weight=1)
+
+        result = tc.embedding.omnibus_embedding(
+            [first, second]
+        )
+
+        self.assertIsNotNone(result)
+
+        for containers in result:
+            self.assertEqual(len(containers[0].embedding.shape), len(containers[1].embedding.shape))
+            self.assertEqual(len(containers[0].vertex_labels), len(containers[1].vertex_labels))
+
+            self.assertTrue(3 in containers[0].vertex_labels)
+            self.assertTrue(4 in containers[0].vertex_labels)
+            self.assertTrue(5 not in containers[0].vertex_labels)
+
+    def test_barbell_graph_generates_embedding(self):
         graph = nx.barbell_graph(10, 2)
 
         for edge in graph.edges():
@@ -133,7 +162,7 @@ class TestOmnibusEmbedding(unittest.TestCase):
             self.assertEqual(len(containers[0].embedding.shape), len(containers[1].embedding.shape))
             self.assertEqual(len(containers[0].vertex_labels), len(containers[1].vertex_labels))
 
-    def test_med_cohort_graph_generates_laplacian_embedding(self):
+    def test_barbell_graph_generates_laplacian_embedding(self):
         graph = nx.barbell_graph(10, 2)
 
         for edge in graph.edges():
