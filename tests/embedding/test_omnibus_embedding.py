@@ -115,7 +115,7 @@ class TestOmnibusEmbedding(unittest.TestCase):
             )
         )
 
-    def test_med_cohort_graph_generates_embedding(self):
+    def test_barbell_graph_generates_embedding(self):
         graph = nx.barbell_graph(10, 2)
 
         for edge in graph.edges():

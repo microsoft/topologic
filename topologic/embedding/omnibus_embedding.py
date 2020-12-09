@@ -92,22 +92,37 @@ def omnibus_embedding(
 
     embedding_containers = []
 
-    previous_graph = largest_connected_component(graphs[0])
+    # union graph lcc strategy
+    union_graph = graphs[0].copy()
+    for graph in graphs[1:]:
+        for s, t, w in graph.edges(data='weight'):
+            if union_graph.has_edge(s, t):
+                union_graph[s][t]['weight'] += w
+            else:
+                union_graph.add_edge(s, t, weight=w)
+
+    union_graph_lcc = largest_connected_component(union_graph)
+    union_graph_lcc_nodes = union_graph_lcc.nodes()
+
+    previous_graph = graphs[0].copy()
 
     count = 1
     for graph in graphs[1:]:
         logging.debug(f'Calculating omni for graph {count} of {len(graphs) - 1}')
         count = count + 1
-        current_graph = largest_connected_component(graph)
+        current_graph = graph.copy()
 
-        pairwise_graphs = [previous_graph] + [current_graph]
-        pairwise_graphs_reduced = _reduce_to_common_nodes(pairwise_graphs)
+        remove_nodes_not_in_set_and_add_missing_nodes_in_set(previous_graph, union_graph_lcc_nodes)
+        remove_nodes_not_in_set_and_add_missing_nodes_in_set(current_graph, union_graph_lcc_nodes)
+
+        pairwise_graphs_reduced = [previous_graph, current_graph]
 
         for i in range(len(pairwise_graphs_reduced)):
             graph_to_augment = pairwise_graphs_reduced[i]
-            ranked_graph = rank_edges(graph_to_augment)
-            diagonal_augmented_graph = diagonal_augmentation(ranked_graph)
-            pairwise_graphs_reduced[i] = diagonal_augmented_graph
+
+            augmented_graph = augment_graph(graph_to_augment)
+
+            pairwise_graphs_reduced[i] = augmented_graph
 
         labels, pairwise_matrices = get_matrices_function(pairwise_graphs_reduced)
         omnibus_matrix = generate_omnibus_matrix(pairwise_matrices)
@@ -135,6 +150,26 @@ def omnibus_embedding(
         )
 
     return embedding_containers
+
+
+def augment_graph(graph_to_augment):
+    ranked_graph = rank_edges(graph_to_augment)
+    augmented_graph = diagonal_augmentation(ranked_graph)
+
+    return augmented_graph
+
+
+def remove_nodes_not_in_set_and_add_missing_nodes_in_set(graph_to_reduce, set_of_valid_nodes):
+    to_remove = []
+    for n in graph_to_reduce.nodes():
+        if n not in set_of_valid_nodes:
+            to_remove.append(n)
+
+    graph_to_reduce.remove_nodes_from(to_remove)
+
+    for node in set_of_valid_nodes:
+        if not graph_to_reduce.has_node(node):
+            graph_to_reduce.add_node(node)
 
 
 def _reduce_to_common_nodes(graphs: List[nx.Graph]):
@@ -215,7 +250,7 @@ def _get_lse_matrix(adjacency_matrix: np.ndarray):
 
     in_root = in_degree_array ** (-0.5)
     out_root = out_degree_array ** (-0.5)
-    
+
     in_root[np.isinf(in_root)] = 0
     out_root[np.isinf(out_root)] = 0
 
