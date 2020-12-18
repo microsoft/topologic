@@ -231,7 +231,7 @@ def _get_adjacency_matrices(graphs):
         for node in sorted_nodes:
             labels.add(node)
 
-    return list(labels), matrices
+    return sorted(list(labels)), matrices
 
 
 def _get_laplacian_matrices(graphs):

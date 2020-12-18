@@ -1,4 +1,6 @@
 # Release Notes
+## 0.1.8
+- Fix an issue with sorting non integer node ids when calculating omnibus embeddings
 ## 0.1.7
 - Use the union graph largest connected component strategy to calculate the omnibus embedding
 ## 0.1.6
