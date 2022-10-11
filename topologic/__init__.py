@@ -22,7 +22,7 @@ from . import partition
 
 import warnings
 
-warnings.warn("The python library `topologic` has been deprecated in favor of `graspologic` in PyPI. Please update your consuming code.  Perhaps you meant the library `topologicpy` https://pypi.org/project/topologicpy/ ?", DeprecationWarning)
+warnings.warn("The python library `topologic` has been deprecated in favor of `graspologic` in PyPI. Please update your consuming code.  Perhaps you meant the library `topologicpy` https://pypi.org/project/topologicpy/ ?", UserWarning)
 
 __all__ = [
     'connected_components_generator',
