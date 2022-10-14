@@ -150,7 +150,7 @@ def from_file(
         be stored for any vertex if it is not detected in the graph already; if there are no edges to or from VertexA,
         there will be no metadata retained for VertexA.
 
-        - "simple" iterates through the file from top to bottom; any vertex that had already captured metadata through
+        - "single" iterates through the file from top to bottom; any vertex that had already captured metadata through
           the vertex metadata projection process will be overwritten with the newest metadata corresponding with that
           vertex.
         - "collection" iterates through the file from top to bottom; all new metadata detected for a given vertex will
