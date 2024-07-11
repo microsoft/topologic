@@ -1,6 +1,5 @@
 # Topologic
-
-## Topologic is now Deprecated
+## Topologic is now Archived and Deprecated
 Please use [Graspologic](https://github.com/microsoft/graspologic) instead.
 
 [![Documentation Status](https://readthedocs.org/projects/topologic/badge/?version=latest)](https://topologic.readthedocs.io/en/latest/?badge=latest)
